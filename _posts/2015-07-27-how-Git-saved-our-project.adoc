@@ -8,6 +8,7 @@ Summary by Thomas SCHWENDER (Softeam StarTech Java)
 :navigation:
 :toc:
 :split:
+:imagesdir: ./images
 
 == An interesting feedback on a migration from SVN to Git
 
@@ -18,7 +19,7 @@ Those last came mainly from the project size, and the number of different branch
 
 To try to solve their problem, they made an analysis to check if they could migrate from SVN to Git, with a https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[Gitflow workflow].
 
-image::images/how-Git-saved-our-project/gitflow.jpg[title="the Gitflow workflow"]
+image::how-Git-saved-our-project/gitflow.jpg[title="the Gitflow workflow"]
 
 After weeks of analysis, they first conclude that *it was not possible because of the whole size of the project*. +
 With Git, *you effectively retrieve all the code on your local repository*. You can't do partial checkouts, contrary to SVN (check the note below for a precision on this point).
