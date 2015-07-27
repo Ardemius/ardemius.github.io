@@ -1,13 +1,4 @@
 = How Git saved our project? (or nearly...)
-Presented at Devoxx France 2015 by Cécilia BOSSARD
-Summary by Thomas SCHWENDER (Softeam StarTech Java)
-:backend: deckjs
-:deckjs_theme: web-2.0
-:deckjs_transition: fade
-:blank:
-:navigation:
-:toc:
-:split:
 
 == An interesting feedback on a migration from SVN to Git
 
