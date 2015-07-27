@@ -4,4 +4,4 @@ A second test, with an image:
 
 image::how-Git-saved-our-project/gitflow.jpg[]
 
-Add some blabla
+A conflict update ???
