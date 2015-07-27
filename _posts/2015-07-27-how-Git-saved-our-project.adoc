@@ -8,7 +8,6 @@ Summary by Thomas SCHWENDER (Softeam StarTech Java)
 :navigation:
 :toc:
 :split:
-:imagesdir: ./images
 
 == An interesting feedback on a migration from SVN to Git
 
