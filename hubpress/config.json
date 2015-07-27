@@ -1,10 +1,1 @@
-{
-  "meta": {
-    "username": "Ardemius",
-    "repositoryName": "ardemius.github.io",
-    "branch": "master"
-  },
-  "theme": {
-    "name": "Casper"
-  }
-}
+{"meta":{"username":"Ardemius","repositoryName":"ardemius.github.io","branch":"master"},"site":{"title":"Inquiring Javaist","logo":"https://secure.gravatar.com/avatar/849f00ab4e13e0e8febe4135f0d17052","url":"https://Ardemius.github.io"},"socialnetwork":{"email":"","twitter":""},"theme":{"name":"Casper","url":"//Ardemius.github.io/themes/Casper"}}
