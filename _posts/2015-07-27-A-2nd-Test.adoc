@@ -1,0 +1,5 @@
+= A 2nd Test
+
+A second test, with an image:
+
+image::how-Git-saved-our-project/gitflow.jpg[]
