@@ -1,6 +1,6 @@
 = How Git saved our project? (or nearly...)
-Author Name <author@example.org>
-v1.0, 2012-02-10
+Cécilia BOSSARD
+:published_at: 2015-04-30
 
 == An interesting feedback on a migration from SVN to Git
 
