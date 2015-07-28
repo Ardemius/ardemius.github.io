@@ -3,6 +3,7 @@ Presented at Devoxx France 2015 by Cécilia BOSSARD
 Summary by Thomas SCHWENDER (Softeam StarTech Java)
 :published_at: 2015-04-30
 :hp-tags: Devoxx France 2015, Git, migration
+:imagesdir: ./images
 
 == An interesting feedback on a migration from SVN to Git
 
