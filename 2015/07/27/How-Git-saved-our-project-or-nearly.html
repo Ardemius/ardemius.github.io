@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>How Git saved our project? (or nearly...)</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//Ardemius.github.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html" />
+    
+    <meta property="og:site_name" content="Inquiring Javaist" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="How Git saved our project? (or nearly...)" />
+    <meta property="og:description" content="An interesting feedback on a migration from SVN to Git In a short time (quickies format requires), Cécilia expounded some advantages and issues when migrating a really big project from SVN to Git. Her project was several millions of code..." />
+    <meta property="og:url" content="https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html" />
+    <meta property="article:published_time" content="2015-07-26T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-07-28T11:18:52.930Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="How Git saved our project? (or nearly...)" />
+    <meta name="twitter:description" content="An interesting feedback on a migration from SVN to Git In a short time (quickies format requires), Cécilia expounded some advantages and issues when migrating a really big project from SVN to Git. Her project was several millions of code..." />
+    <meta name="twitter:url" content="https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Inquiring Javaist",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars.githubusercontent.com/u/1645190?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "How Git saved our project? (or nearly...)",
+    "url": "https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html",
+    "datePublished": "2015-07-26T22:00:00.000Z",
+    "dateModified": "2015-07-28T11:18:52.930Z",
+    "description": "An interesting feedback on a migration from SVN to Git In a short time (quickies format requires), Cécilia expounded some advantages and issues when migrating a really big project from SVN to Git. Her project was several millions of code..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Inquiring Javaist" href="https://Ardemius.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://Ardemius.github.io">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://Ardemius.github.io/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">How Git saved our project? (or nearly...)</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-07-27">27 July 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="sect1">
+<h2 id="_an_interesting_feedback_on_a_migration_from_svn_to_git">An interesting feedback on a migration from SVN to Git</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In a short time (quickies format requires), Cécilia expounded some advantages and issues when migrating a <strong>really big</strong> project from SVN to Git.</p>
+</div>
+<div class="paragraph">
+<p>Her project was several millions of code lines, and was having problems when releasing a new version, because of some merge issues.<br>
+Those last came mainly from the project size, and the number of different branches to merge at this moment.</p>
+</div>
+<div class="paragraph">
+<p>To try to solve their problem, they made an analysis to check if they could migrate from SVN to Git, with a <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Gitflow workflow</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/how-Git-saved-our-project/gitflow.jpg" alt="gitflow.jpg">
+</div>
+<div class="title">Figure 1. the Gitflow workflow</div>
+</div>
+<div class="paragraph">
+<p>After weeks of analysis, they first conclude that <strong>it was not possible because of the whole size of the project</strong>.<br>
+With Git, <strong>you effectively retrieve all the code on your local repository</strong>. You can&#8217;t do partial checkouts, contrary to SVN (check the note below for a precision on this point).</p>
+</div>
+<div class="paragraph">
+<p>Then, thinking to <a href="http://git-scm.com/about">the advantages of the migration</a>, they decided the reduce the size of the project, by cleaning dead code.
+With that, the 2nd conclusion was let&#8217;s go to Git!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tips_and_things_to_remember">Tips and things to remember</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>With Git, less disk space is required.<br>
+As for Git, <strong>branch are only pointers</strong>, contrary to SVN where they are file system copies.</p>
+</li>
+<li>
+<p>Beware of the whole project size!<br>
+Contrary to SVN, Git doesn&#8217;t allow partial checkouts (feature called <a href="http://svnbook.red-bean.com/en/1.7/svn.advanced.sparsedirs.html"><em>sparse directories</em></a> in SVN).<br>
+So, do not forget the housekeeping, and <strong>clean dead code</strong>!</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To be more precised, since version 1.7.0, Git also enables sparce checkouts <strong>for the working directory</strong> (check <a href="http://schacon.github.io/git/git-read-tree.html#_sparse_checkout">here</a>).
+Unfortunately, <strong>it does not affect the size of the overall local repository</strong> (you <strong>WILL</strong> get the whole thing).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Beware of <a href="https://help.github.com/articles/dealing-with-line-endings/">line endings configuration</a>.</p>
+</li>
+<li>
+<p>Beware of the <strong>encoding of your merge tool</strong>.<br>
+Think to configure it to use UTF-8.</p>
+</li>
+<li>
+<p><strong>get the <code>.git</code> out ouf the Eclipse workspace</strong>, so as not to slow your IDE too much.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/1645190?v=3)"><span class="hidden">'s Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href=""></a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">France</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=How%20Git%20saved%20our%20project%3F%20(or%20nearly...)&amp;url=https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://Ardemius.github.io/2015/07/27/How-Git-saved-our-project-or-nearly.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://Ardemius.github.io">Inquiring Javaist</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//Ardemius.github.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//Ardemius.github.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
