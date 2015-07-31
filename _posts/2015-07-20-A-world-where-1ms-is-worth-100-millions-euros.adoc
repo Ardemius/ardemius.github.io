@@ -1,0 +1,7 @@
+= A world where 1ms is worth 100 millions euros
+:published_at: 2015-07-20
+:hp-tags: Devoxx France 2015, performance, memory model, lock-free algorithms, queue, volatile, logs
+:imagesdir: ./images
+:lb: pass:[<br> +]
+
+Hi
