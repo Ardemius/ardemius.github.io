@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Understanding latency and application responsiveness</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//Ardemius.github.io/themes/Roon/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Open+Sans:400italic,700italic,700,400">
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/Roon/assets/css/screen.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html" />
+    
+    <meta property="og:site_name" content="Inquiring Javaist" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Understanding latency and application responsiveness" />
+    <meta property="og:description" content="Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems Summary by Thomas SCHWENDER (Softeam StarTech Java) A few words on Gil and his company: Azul Systems Gil has a long history of working on Garbage Collectors and..." />
+    <meta property="og:url" content="https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html" />
+    <meta property="article:published_time" content="2015-04-28T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-07-31T08:33:41.428Z" />
+    <meta property="article:tag" content="Devoxx France 2015" />
+    <meta property="article:tag" content="performance" />
+    <meta property="article:tag" content="latency" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Understanding latency and application responsiveness" />
+    <meta name="twitter:description" content="Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems Summary by Thomas SCHWENDER (Softeam StarTech Java) A few words on Gil and his company: Azul Systems Gil has a long history of working on Garbage Collectors and..." />
+    <meta name="twitter:url" content="https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Inquiring Javaist",
+    "author": {
+        "@type": "Person",
+        "name": "Thomas SCHWENDER",
+        "image": "https://avatars.githubusercontent.com/u/1645190?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Understanding latency and application responsiveness",
+    "url": "https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html",
+    "datePublished": "2015-04-28T22:00:00.000Z",
+    "dateModified": "2015-07-31T08:33:41.428Z",
+    "keywords": "Devoxx France 2015,  performance,  latency",
+    "description": "Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems Summary by Thomas SCHWENDER (Softeam StarTech Java) A few words on Gil and his company: Azul Systems Gil has a long history of working on Garbage Collectors and..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Inquiring Javaist" href="https://Ardemius.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-Devoxx-France-2015 tag-performance tag-latency  noimage">
+
+    
+
+
+    <article role="main" class="">
+        <header>
+            <a href="https://Ardemius.github.io" id="home_link">«</a>
+            <div class="meta"><time datetime="2015-04-29"><a href="/2015/04/29/Understanding-latency-and-application-responsiveness.html">April 29, 2015</a></time> <span class="count" id="js-reading-time"></span></div>
+            <h1>Understanding latency and application responsiveness</h1>
+        </header>
+
+        <div class="text" id="js-post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems<br>
+Summary by Thomas SCHWENDER (Softeam StarTech Java)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_few_words_on_gil_and_his_company_azul_systems">A few words on Gil and his company: Azul Systems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gil has a long history of working on Garbage Collectors and GC algorithms, Virtual Machines, Operating Systems and Enterprise apps.</p>
+</div>
+<div class="paragraph">
+<p><a href="http://www.azulsystems.com/">Azul Systems</a> is a high-technology company specialised in performance, real time business, for the Java world.
+It is the editor of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a highly reactive custom JVM: <a href="http://www.azulsystems.com/products/zing/whatisit">Zing</a></p>
+</li>
+<li>
+<p>a multi-platform build of OpenJDK: <a href="http://www.azulsystems.com/products/zulu">Zulu</a></p>
+</li>
+<li>
+<p>a performance monitoring tool: <a href="http://www.azulsystems.com/product/jHiccup">jHiccup</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this talk, Gil discusses:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>common pitfalls encountered in measuring and characterizing latency.<br>
+The main idea being that <strong>good characterization of bad data isn&#8217;t worth a penny</strong>.</p>
+</li>
+<li>
+<p>ways to address those pitfalls using some new open source tools.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_matters_with_latency_is_behavior">What matters with latency is BEHAVIOR</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Latency, response time, round trip: all that are the same thing.
+But, if we want a definition, let&#8217;s say:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Latency</strong> is the time it took one operation to happen
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>And what matters in latency is its <strong>behavior</strong>, its WHOLE, REAL behavior.<br>
+As latency doesn&#8217;t follow a normal distribution, we can&#8217;t "feel" what will be its worst cases from an average, or from the 90%, 99%, 99.99% most favorable cases.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/latency_notANormalDistribution.PNG" alt="latency notANormalDistribution.PNG">
+</div>
+<div class="title">Figure 1. Latency does NOT follow a normal distribution</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dealing_with_hiccups">Dealing with Hiccups</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gil calls those unpredictable "bad" cases <strong>Hiccups</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/Hiccups.PNG" alt="Hiccups.PNG">
+</div>
+<div class="title">Figure 2. Hiccups</div>
+</div>
+<div class="paragraph">
+<p>Those hiccups:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>are generally NOT correlated to load</p>
+</li>
+<li>
+<p>can happen because of "noise"</p>
+</li>
+<li>
+<p>can happen because periodic events (garbage collection)</p>
+</li>
+<li>
+<p>can happen because of cumulated work you have to pay for (ex: you had the CPU for the last 10 ms, and now that&#8217;s somebody else turn)</p>
+</li>
+<li>
+<p>look like periodic freezes</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p>The big problem with Hiccups is that, most of time, when you ask people "how does behave the 99% of that", they answer by a <strong>projection</strong> based on the data they have, and <strong>not with the real data</strong>.<br>
+As we saw that those data, those Hiccups, are unpredictable, this answer is always <strong>bad</strong>.</p>
+</div>
+<div class="paragraph">
+<p>To deal with them, we need <strong>real data</strong>, and numerous ones.
+Once we have them, we can ask for some <strong>Service Level Requirements</strong> based on a real behavior:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/latency-characterization.PNG" alt="latency characterization.PNG">
+</div>
+<div class="title">Figure 3. Requirements compared to REAL behavior</div>
+</div>
+<div class="paragraph">
+<p>From there, if the latency behavior doesn&#8217;t match the requirements, <strong>we know where to focus our efforts</strong>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requirements">Requirements</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Latency requirements are usually a list of PASS/FAIL tests based on some predefined criteria.</p>
+</li>
+<li>
+<p>And <strong>measurements should provide data to evaluate those requirements</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>So be sure to have the requirements established <strong>exhaustively</strong>, with no case forgotten.
+An example of correct Service Level Requirements for latency:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>50% better than 20 msec</p>
+</li>
+<li>
+<p>90% better than 50 msec</p>
+</li>
+<li>
+<p>99.9% better than 500 msec</p>
+</li>
+<li>
+<p>100% better than 2 seconds</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A notion to remember:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Sustainable throughput</strong>: the throughput achieved while safely maintening service levels
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_coordinated_omission_problem">The coordinated omission problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gil explains that some dreadful omissions are done when load testing or monitoring:</p>
+</div>
+<div class="paragraph">
+<p>For load tests, we generally expect all requests to have the same duration, to be sent at a certain rate.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+But it doesn&#8217;t work if requests are sent in an uncoordinated way.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For monitoring, we generally measure latency between the start and end of each operation.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>But it only works when no queuing occurs.<br>
+Long operations only get measured once, queued operations are measured wrong.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/Coordinated-omission_bad-example.PNG" alt="Coordinated omission bad example.PNG">
+</div>
+<div class="title">Figure 4. Here you have a BIG problem</div>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The solution: to test <strong>other cases</strong> !
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>vary the duration of the requests</p>
+</li>
+<li>
+<p>test those other duractions in big number</p>
+</li>
+<li>
+<p>do not hesitate to <strong>freeze</strong> the system while testing (to create a request engorgement)</p>
+</li>
+<li>
+<p>always measure Max time.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/Coordinated-omission_correct-example.PNG" alt="Coordinated omission correct example.PNG">
+</div>
+<div class="title">Figure 5. You should have done that</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_detect_those_coordinated_omission">How to detect those coordinated omission?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If, in an uncorrected metric, you see a <strong>vertical rise</strong>, think it is probably a coordinated omission.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/Coordinated-omission_correction.PNG" alt="Coordinated omission correction.PNG">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/understanding-latency/Coordinated-omission_correction2.PNG" alt="Coordinated omission correction2.PNG">
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Those omissions are present in a LOT OF tools (JMeter &amp; Co).<br>
+So, BE CAREFUL!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_some_tools">Some tools</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/HdrHistogram/HdrHistogram">HdrHistogram</a>: a High Dynamic Range Histogram.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>covers a configurable <strong>dynamic</strong> value range (ex: track values between 1 ms and 1 hour)</p>
+</li>
+<li>
+<p>built-in <strong>compensation for Coordinated Omission</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="http://www.azulsystems.com/jHiccup">JHiccup</a>: a tool for <strong>capturing and displaying platform hiccups</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>records any observed <strong>non-continuity</strong> of the underlying platform</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+        </div>
+
+        <menu>
+            <a href="" id="btn_share" class="btn" title="Share">
+                <span aria-hidden="true" data-icon="S"></span>
+                <strong>Share</strong>
+            </a>
+            <a href="http://twitter.com/share?text=Understanding%20latency%20and%20application%20responsiveness&url=https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" id="btn_comment" class="btn" target="_blank">
+                <span aria-hidden="true" data-icon="C"></span> Comment on Twitter
+            </a>
+        </menu>
+
+
+        <footer class="post-footer" role="contentinfo">
+
+            <div class="vcard">
+                <!-- <a href="https://Ardemius.github.io/rss" id="btn_feed" class="btn" title="Feed" target="_blank">
+                    <span aria-hidden="true" data-icon=")"></span>
+                    <strong>Feed</strong>
+                </a> -->
+
+                <a href="" class="photo">
+                    <span style="background-image: url('https://avatars.githubusercontent.com/u/1645190?v=3');">
+                        <img src="https://avatars.githubusercontent.com/u/1645190?v=3" alt="Thomas SCHWENDER">
+                    </span>
+                </a>
+
+                <div class="details">
+                    <h4><a href="" class="url n">Thomas SCHWENDER</a></h4>
+                    Paris, France<br>
+                    
+                </div>
+            </div>
+
+            <div id="user_bio">
+                <div class="inner">
+                    
+                </div>
+            </div>
+
+        </footer>
+
+
+
+
+    </article>
+
+    <div id="share_modal">
+        <div class="wrap">
+            <div class="inner">
+                <header>
+                    Share
+                    <a href="" class="close" title="Close">&times;</a>
+                </header>
+
+                <div class="roon-share-links">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                    <div id="fb-elems">
+                        <div id="fb-root"></div>
+                        <script>(function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=463438580397968";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+                        <div class="fb-like" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
+                    </div>
+
+                    <div id="pinit-btn">
+                        <a href="//pinterest.com/pin/create/button/?url=https://Ardemius.github.io/2015/04/29/Understanding-latency-and-application-responsiveness.html&amp;description=Understanding%20latency%20and%20application%20responsiveness-Inquiring%20Javaist " data-pin-do="buttonPin" data-pin-config="beside"><img src="//assets.pinterest.com/images/pidgets/pin_it_button.png"></a>
+                        <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <a href="https://Ardemius.github.io" id="blog_badge">
+            <span style="background-image: url('https://secure.gravatar.com/avatar/849f00ab4e13e0e8febe4135f0d17052');">Inquiring Javaist</span>
+        </a>
+
+
+    <script>
+
+            function get_text(el) {
+                ret = "";
+                var length = el.childNodes.length;
+                for(var i = 0; i < length; i++) {
+                    var node = el.childNodes[i];
+                    if(node.nodeType != 8) {
+                        ret += node.nodeType != 1 ? node.nodeValue : get_text(node);
+                    }
+                }
+                return ret;
+            }
+            function reading_time () {
+                var post_content = document.getElementById('js-post-content');
+                if (post_content) {
+                    var words = get_text(post_content),
+                        count = words.split(/\s+/).length,
+                        read_time = Math.ceil((count / 150)),
+                        read_time_node = document.createTextNode(read_time + ' min read');
+                    document.getElementById('js-reading-time').appendChild(read_time_node);
+                }
+            }
+
+        function no_schema_links () {
+            var links = document.querySelectorAll('.js-remove-domain-schema');
+            if (links) {
+                for (i = 0; i < links.length; ++i) {
+                    var link = links[i],
+                        text = link.innerHTML,
+                        no_schema = text.replace(/.*?:\/\//g, "");
+                    link.innerHTML = no_schema;
+                }
+            }
+        }
+
+        window.onload = function () {
+            no_schema_links();
+
+            reading_time();
+        }
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+        <script>
+            $(function(){
+                var share_modal = $("#share_modal"),
+                    update_social_links = true;
+
+                $("#btn_share").click(function(){
+                    var that = $(this);
+                    share_modal.fadeIn(200);
+                    return false;
+                });
+
+                share_modal.click(function(e){
+                    if (e.target.className == "wrap" || e.target.id == "share_modal") {
+                        share_modal.fadeOut(200);
+                    }
+                    return false;
+                });
+
+                share_modal.find("div.inner > header > a.close").click(function(){
+                    share_modal.fadeOut(200);
+                    return false;
+                });
+            });
+        </script>
+
+
+
+</body>
+</html>
