@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>A world where 1ms is worth 100 millions euros</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//Ardemius.github.io/themes/Roon/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Open+Sans:400italic,700italic,700,400">
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/Roon/assets/css/screen.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" />
+    
+    <meta property="og:site_name" content="Inquiring Javaist" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="A world where 1ms is worth 100 millions euros" />
+    <meta property="og:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..." />
+    <meta property="og:url" content="https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" />
+    <meta property="article:published_time" content="2015-07-19T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-07-31T08:34:17.942Z" />
+    <meta property="article:tag" content="Devoxx France 2015" />
+    <meta property="article:tag" content="performance" />
+    <meta property="article:tag" content="memory model" />
+    <meta property="article:tag" content="lock-free algorithms" />
+    <meta property="article:tag" content="queue" />
+    <meta property="article:tag" content="volatile" />
+    <meta property="article:tag" content="logs" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="A world where 1ms is worth 100 millions euros" />
+    <meta name="twitter:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..." />
+    <meta name="twitter:url" content="https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Inquiring Javaist",
+    "author": {
+        "@type": "Person",
+        "name": "Thomas SCHWENDER",
+        "image": "https://avatars.githubusercontent.com/u/1645190?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "A world where 1ms is worth 100 millions euros",
+    "url": "https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html",
+    "datePublished": "2015-07-19T22:00:00.000Z",
+    "dateModified": "2015-07-31T08:34:17.942Z",
+    "keywords": "Devoxx France 2015,  performance,  memory model,  lock-free algorithms,  queue,  volatile,  logs",
+    "description": "Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Inquiring Javaist" href="https://Ardemius.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-Devoxx-France-2015 tag-performance tag-memory-model tag-lock-free-algorithms tag-queue tag-volatile tag-logs  noimage">
+
+    
+
+
+    <article role="main" class="">
+        <header>
+            <a href="https://Ardemius.github.io" id="home_link">«</a>
+            <div class="meta"><time datetime="2015-07-20"><a href="/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html">July 20, 2015</a></time> <span class="count" id="js-reading-time"></span></div>
+            <h1>A world where 1ms is worth 100 millions euros</h1>
+        </header>
+
+        <div class="text" id="js-post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA<br>
+Elucidation by Thomas SCHWENDER (Softeam StarTech Java)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bank_is_an_other_big_data_domain">Bank is an other Big Data domain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Alexandre and Thierry explain us that Big Data isn&#8217;t only for Google, Facebook and Twitter.<br>
+Bank is an other big consumer / producer of data.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/big-data-in-bank.PNG" alt="big data in bank.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>The need for speed (for financial transactions) is so high, that <strong>even the optical fibre is not enough</strong>.<br>
+Because of the <a href="http://fr.wikipedia.org/wiki/Indice_de_r%C3%A9fraction">refractive index</a> of the light in the heart of the fibre (1.5), it&#8217;s "only" the half of the speed of light in vacuum.<br>
+To address this problem, trading companies are now using microwave communication.<br>
+Take a look at <a href="http://www.ft.com/cms/s/2/2bf37898-b775-11e2-841e-00144feabdc0.html">this article of the Financial Times</a> if you want to know more on this <em>speed race</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_code_optimization_cache_and_hardware_memory_architecture">Code optimization: Cache and Hardware Memory Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A first example puts forward the good comprehension of caches working in modern hardware memory architecture (meaning in <strong>multicore processor</strong>).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/scan-array-comparison.PNG" alt="scan array comparison.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>This example is a comparison of a 2D array traversal, which ends with <strong>the left program being much faster than the right one</strong>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is the consequence of one of the main principles behind cache: <strong>spatial locality</strong> (the other being <strong>temporal locality</strong>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Spatial locality</strong> means that, if you access a data entry at some address, you will probably need data entries whose addresses are close soon.</p>
+</li>
+<li>
+<p><strong>Temporal locality</strong> means that, if you accessed a data entry, you will probably need it, and so access it again soon.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here, the left program traverses the array <strong>a row at a time</strong>, thus reading the memory sequentially.<br>
+But, the right program does it column-wise, and so, after having read an entry, <strong>jumps to a completely different location</strong> (the start of the next row), and repeats this working all along the traversal.<br>
+So, when finally getting back to a previous row, it will probably not be in the cache anymore.</p>
+</div>
+<div class="paragraph">
+<p>A quick reminder of the cost of I/O:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/cost-of-IO.PNG" alt="cost of IO.PNG">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_benchmark_to_be_sure">Benchmark to be sure!</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Do not assume which is the fastest! Benchmark to be sure!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="http://openjdk.java.net/projects/code-tools/jmh/">OpenJDK JMH</a> (for <strong>Java Microbenchmarking Harness</strong>) is the new "hot" tool to <strong>build, run, and analyse nano/micro/milli/macro benchmarks written in Java</strong> (or other languages targeting the JVM).<br>
+Its main advantage over other frameworks is to be developed by the same guys in Oracle who implement the JIT.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multithreading_is_not_always_the_solution">Multithreading is not always the solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Do not forget that <strong>the setting up of multithreading always as a cost</strong>.<br>
+Depending on your process duration, this extra time can really be NON-neglibible.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/multithreading-has-a-cost.PNG" alt="multithreading has a cost.PNG">
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Again, do not assume it will be faster, benchmark it!
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_ways_to_go_faster">Other ways to go faster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To avoid a brutal use of multithreading, Alexandre and Thierry propose some asynchronous architectures.</p>
+</div>
+<div class="paragraph">
+<p>Even if that wasn&#8217;t the main purpose of this conference, they also said a few words on <strong>hexagonal architecture</strong>, which also was a "buzz" word during the whole show.
+Here is a quick explanation about it.</p>
+</div>
+<div class="sect2">
+<h3 id="_hexagonal_architecture">Hexagonal architecture</h3>
+<div class="paragraph">
+<p>The main purpose of <strong>hexagonal architecture</strong> (or <strong>Ports and Adapters</strong> architecture) is an old one: to clearly <strong>separate business from technical implementation</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Its underlying principles are summarized in a hexagonal schema:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/hexagonal-architecture.PNG" alt="hexagonal architecture.PNG">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <strong>domain layer</strong> is at the center of the hexagon, in green. It contains the business logic of the application.</p>
+</li>
+<li>
+<p>the <strong>ports layer</strong>, around the domain model, receives all the requests that corresponds to a use case that orchestrates the work in the domain model.</p>
+</li>
+<li>
+<p>the <strong>adapters / connectors</strong>, that allow communication with the outside, are in grey outer hexagon.</p>
+</li>
+<li>
+<p>all that is at the <strong>left of the hexagon</strong> represents <strong>those that need it</strong>.</p>
+</li>
+<li>
+<p>all that is at the <strong>right of the hexagon</strong> represents <strong>the components that the hexagon needs</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The purpose of this architecture is to defined <strong>business-centric modules</strong> whose business layer has no dependency with any technical part.<br>
+This requires the use of the <strong>DIP</strong>: <em>Dependency Inversion Principal</em>.<br>
+By looking at the last schema we indeed see that the internal hexagon has no dependency towards the outside: those are the adapters that do the link between the domain and the services to be called.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s come back to our asynchronous alternatives to brutal multithreading.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_event_loop_and_queue_mpsc_multiple_producer_single_consumer">Event loop and queue MPSC (Multiple Producer Single Consumer)</h3>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/event-loop-and-queue-MPSC.PNG" alt="event loop and queue MPSC.PNG">
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A definition of the <strong>Event loop</strong> could be:<br>
+An entity that handles and processes external events and converts them into callback invocations.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The important thing to remember is that the Event loop itself is <strong>single threaded</strong>.<br>
+In the current architecture, it reads its inputs from from a Multiple Producer Single Consumer queue.</p>
+</div>
+<div class="paragraph">
+<p>So we are not creating a new thread for each new input, but are relying on the dispatching of the single threaded Even loop, which is better.</p>
+</div>
+<div class="paragraph">
+<p>Now, if we want to be even faster, we must consider that the <strong>MPSC queue being NOT lock free</strong>, it can be a <strong>bottleneck in case of huge volumetry</strong>.<br>
+Effectively, with <strong>locks</strong>, you must pay for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>system calls</p>
+</li>
+<li>
+<p>context switch</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>So, let&#8217;s now present a lock free alternative.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_event_loop_and_queues_spsc_single_producer_single_consumer">Event loop and queues SPSC (Single Producer Single Consumer)</h3>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/event-loop-and-queues-SPSC.PNG" alt="event loop and queues SPSC.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, we do not use anymore Multiple Producer Single Consumer queues, but <strong>Single Producer Single Consumer</strong>, <strong>lock free</strong> ones.<br>
+By doing so, we respect the <strong>Single Writer Principle</strong>, hence our threads <strong>do not contend for the right to write</strong>.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The Single Writer Principle is that for any item of data, or resource, that item of data should be owned by a single execution context for all mutations.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Martin Thompson
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/single-writer-principle.PNG" alt="single writer principle.PNG">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_an_example_of_lock_free_spsc_queue_the_ring_buffer">An example of lock-free SPSC queue: the Ring Buffer</h3>
+<div class="paragraph">
+<p>The <strong>Ring Buffer</strong>, or Circular Buffer, was one of the buzz word of the performance oriented presentations of the conference.<br></p>
+</div>
+<div class="paragraph">
+<p>It is a first in, first out (<strong>FIFO</strong>) data structure that uses a <strong>bounded</strong> (fixed-size) buffer, as if it were connected end-to-end.<br>
+You use to pass stuff from one context (one thread) to another.<br></p>
+</div>
+<div class="paragraph">
+<p>One of its useful characteristic is that <strong>items in the buffer are never moved</strong>.<br>
+Instead, <strong>changeable pointers</strong> are used to <strong>identify the head and tail</strong> of the queue.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/ring-buffer-schema.PNG" alt="ring buffer schema.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>With one reader and one writer (SPSC), the Ring Buffer is a <strong>lock-free</strong> and <strong>wait-free</strong> FIFO buffer.<br></p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Beware when reader and writer indices remain too close.<br>
+In this case, you&#8217;ll have each thread constantly invalidating a shared cache line.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_code_volatile_code_keyword_an_efficient_design_for_memory_synchronization">The <code>volatile</code> keyword: an efficient design for memory synchronization</h3>
+<div class="paragraph">
+<p><code>volatile</code> is Java keyword about which much was written, especially since <strong>its definition changed as of Java 5</strong>.<br>
+From this version, it has the following characteristics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><em>rule 1:</em></strong><br>
+The value of a <code>volatile</code> variable will never be cached thread-locally: <strong>all reads and writes will go straight to "main memory"</strong>.<br>
+That implies that different threads can access the variable.</p>
+</li>
+<li>
+<p><strong><em>rule 2:</em></strong><br>
+The adding of Java 5: accessing a volatile variable creates <strong>a memory barrier</strong>.<br>
+It effectively <strong>synchronizes ALL cached copies of variables with main memory</strong>. <strong>ALL</strong>, not only the lone <code>volatile</code> variable.<br>
+Therefore, it becomes possible to <strong>write to one variable without synchronization, and then take advantage of subsequent synchronization on a different variable</strong>, to ensure that main memory is updated with both variables.</p>
+</li>
+<li>
+<p><strong><em>rule 3:</em></strong><br>
+A <strong>write</strong> to a volatile field <strong>happens-before</strong> every subsequent <strong>read</strong> of that field.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Happens-before</strong> relationship:<br>
+If one action <strong>happens-before</strong> another, then <strong>the first is visible to and ordered before the second</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This implies that <strong>the reading and writing instructions of volatile variables cannot be reordered by the JVM</strong>.<br>
+Other instructions before and after can be reordered, but the volatile read or write cannot be mixed with these instructions.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s illustrate that with the 2 following examples:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>First:</p>
+<div class="literalblock">
+<div class="content">
+<pre>// Thread A:
+sharedObject.nonVolatileInteger = 123;
+sharedObject.volatileInteger    = volatileInteger + 1;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>// Thread B:
+int volatileInteger    = sharedObject.volatileInteger;
+int nonVolatileInteger = sharedObject.nonVolatileInteger;</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Since Thread A writes the non-volatile variable <code>sharedObject.nonVolatileInteger</code> before writing to the volatile <code>sharedObject.volatileInteger</code>, then <strong>BOTH</strong> variables (rule 2) are written to main memory (rule 1).<br></p>
+</li>
+<li>
+<p>Since Thread B starts by reading the volatile <code>sharedObject.volatileInteger</code>, then BOTH the <code>sharedObject.volatileInteger</code> and <code>sharedObject.nonVolatileInteger</code> are read in from main memory.<br>
+That illustrates rule 3: volatile read or write can NOT be reordered with other instructions.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Second:</p>
+<div class="literalblock">
+<div class="content">
+<pre>public class StoppableTask extends Thread {
+    private volatile boolean pleaseStop;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void run() {
+    while (!pleaseStop) {
+        // do some stuff...
+    }
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    public void tellMeToStop() {
+        pleaseStop = true;
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say Thread A reads the <code>pleaseStop</code> variable, and Thread B writes it.
+<br><br>
+If <code>pleaseStop</code> were not declared volatile, then it would be legal for the Thread A (running the loop) <strong>to cache its value at the start of the loop and never read it again</strong>.<br>
+That would mean that, even if Thread B writed in <code>pleaseStop</code>, it would end in an <strong>infinite loop</strong>.<br>
+With volatile rule 1, both threads are <strong>guaranteed to share the same <code>pleaseStop</code> value</strong> (because read and written from main memmory).</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In the case of the former Ring Buffer, with the following variables declaration:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>private final E[] buffer;
+private volatile long producerIndex = 0;
+private volatile long consumerIndex = 0;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We know that we would obtain this:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/volatile-happens-before-Java-1.5.PNG" alt="volatile happens before Java 1.5.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>It is guaranteed that the write of <code>producerIndex</code> (<code>producerIndex++;</code>) happens-before its subsequent read (<code>if (consumerIndex == producerIndex)</code>) (rule 3), and that those read / write synchronize <strong>ALL</strong> cached copies of variables from main memory (the <code>buffer</code> variable here).</p>
+</div>
+<div class="sect3">
+<h4 id="_volatile_and_performance">Volatile and performance</h4>
+<div class="paragraph">
+<p>Reading and writing of volatile variables causes those last to be <strong>read or written to main memory</strong>, which is <strong>slower than accessing the CPU cache</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Moreover, writing a volative variable implies <strong>a flush of its underlying store buffer</strong>, which has a cost.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Volatile store buffer:<br>
+This store buffer is also called <strong>Memory Ordering buffer</strong> and is placed between registers and L1 cache.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/volatile-store-buffer.PNG" alt="volatile store buffer.PNG">
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As a consequence of this performance cost, only use volatile variables when you really need to <strong>enforce the visibility of variables</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_java_util_concurrent_atomic_atomicxxx_to_overcome_volatile_performance">java.util.concurrent.atomic.AtomicXXX to overcome volatile performance</h4>
+<div class="paragraph">
+<p>When <strong>only</strong> wanting to <strong>ensure memory ordering across Java threads</strong> (meaning you are not interested by ensuring data visibility to other threads, see <code>volatile</code> rule 1), instead of setting a volatile variable, you can use the <code>lazySet</code> method of Java <strong>atomics</strong> (see <code>AtomicInteger</code>, <code>AtomicLong</code>, <code>AtomicReference</code>, etc.).<br>
+By doing so, <strong>you do not pay for the volatile underlying store buffer flushing</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Using atomics instead of volatiles, we can still improve the precedent ring buffer implementation:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>private final E[] buffer;
+private final AtomicLong producerIndex = new AtomicLong();
+private final AtomicLong consumerIndex = new AtomicLong();</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/AtomicLong-instead-of-volatile.PNG" alt="AtomicLong instead of volatile.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a ~3 times faster implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_instruction_pipelining">Instruction Pipelining</h3>
+<div class="paragraph">
+<p>Alexandre and Thierry presented the <strong>instruction pipelining</strong> through the following quizz:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/instruction-pipeline-quizz.PNG" alt="instruction pipeline quizz.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, that&#8217;s the 1st program which ~5 times faster, precisely because of this technique.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Instruction pipelining</strong>:<br>
+A technique used by <strong>processors</strong>, by which <strong>the basic instruction cycle is broken up into a series</strong> called a <strong>pipeline</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/instruction-pipeline.PNG" alt="instruction pipeline.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>The avantage of this technique is to <strong>increase the instruction throughput</strong> (the number of instructions that can be executed in a unit of time).<br>
+As each instruction is split up into a <strong>sequence of steps</strong> (<code>Fetch</code> / <code>Decode</code> / <code>Execute</code> / <code>Write-back</code> in the current example), those last can be <strong>executed in parallel</strong>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Be aware that we are speaking of <strong>parallel processing inside one thread</strong>, which is <strong>NOT</strong> multithreading.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the current example, the reason why program 1 is faster than program 2 comes from a matter of <strong>prediction</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Program 2 is based on a <code>if / else</code> statement.<br>
+If we want the processor to be able to execute instructions, <strong>without knowing in advance the result of this <code>if / else</code> statement</strong>, it will have to do a <strong>prediction</strong>.<br>
+This prediction is done by a <strong>branch predictor</strong> component of the processor, that acts based on the instructions history.<br>
+If only <code>else</code> were done in the past, it will try an other <code>else</code> next time.</p>
+</div>
+<div class="paragraph">
+<p>Understandably, there will be some <strong>bad predictions</strong>, with the result of <strong>nullifying the next results</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/instruction-pipeline-bad-prediction.PNG" alt="instruction pipeline bad prediction.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>On the contrary, program 1, using Java native <code>Math.abs</code> method, is based on a <strong>simple ternary operator</strong>.<br>
+This operator doesn&#8217;t imply prediction, and so, is not concerned by bad predictions (also called <strong>hazards</strong>), hence the better performance.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logs">Logs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When facing high volumetry, <strong>logs can quickly become a high performance cost</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Classic log writing in a file is blocking, which is a problem.<br>
+To solve it, we can use a buffer, but if the process crashes, we lose its content, which is another problem.
+To solve both those last, Alexandre and Thierry put forward the <strong>Chronicle-Logger</strong> API from Peter Lawrey, which is based on a <strong>memory-mapped file</strong>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A theorical definition of a <strong>memory-mapped file</strong>:<br>
+A <strong>memory-mapped file</strong> is a segment of virtual memory which has been assigned a direct byte-for-byte correlation with some portion of a file or file-like resource.<br>
+This correlation between the file and the memory space permits applications to <strong>treat the mapped portion as if it were primary memory</strong> (meaning your RAM).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Simplier, a memory-mapped file is a <strong>mechanism that synchronizes a memory area of your RAM with your hard drive</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/memory-mapped-file.PNG" alt="memory mapped file.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>Characteristics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Memory-mapped files are stored <strong>off-heap</strong>.</p>
+</li>
+<li>
+<p>It&#8217;s a <strong>very performant, fast, solution for big files</strong>, but is <strong>not recommended for smaller ones</strong> (probably slower than a classic access).</p>
+</li>
+<li>
+<p>Once you wrote to the mapped memory area, then, later, <strong>asynchronously</strong>, the <strong>operating system</strong> will flush those writings to the disk.<br>
+So, from the moment the initial writing in the memory area is done (and it&#8217;s rather quick), even if the Java process then crashes, the OS will still be able to flush the data to the disk. That way, you are far less likely to lose the last log message.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Even if its underlying memory-mapped file implies an asynchronous data flush by the OS, the <strong>Chronicle-Logger is a synchronous logger</strong> (contrary to Log4J <code>AsynAppenders</code> or <code>AsyncLoggers</code> by example).<br>
+Log are indeed written <strong>at once</strong> in the memory area.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can be even faster by <strong>logging binary data rather than text</strong> (it, of course, depends on what you have to log.)</p>
+</div>
+<div class="paragraph">
+<p>Here is a quick comparison (using HdrHistogram, see below) of a classic <strong>FileAppender against a binary appender, using a memory map file</strong>, from Chronicle-Logger:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/file-appender-vs-memory-map-file-binary.PNG" alt="file appender vs memory map file binary.PNG">
+</div>
+</div>
+<div class="paragraph">
+<p>Even in the worst cases</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_final_advise">Final advise</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Never assume about the latency of your solution, <strong>MEASURE IT!</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As already explained in presentation <a href="https://www.parleys.com/tutorial/understanding-latency-application-responsiveness-1">Understanding latency and application responsiveness</a> from Gil Tene, <strong>do not trust averages</strong>, which can hide some behaviours, prefer the use of <strong>percentile</strong>.<br>
+For that you can use his open source tool: <a href="http://hdrhistogram.org/">HdrHistogram</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/a-world-where-1ms-is-worth-100ME/HdrHistogram.PNG" alt="HdrHistogram.PNG">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ressources">Ressources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Slides and video of the presentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.parleys.com/tutorial/un-monde-ou-1-ms-vaut-100-m" class="bare">https://www.parleys.com/tutorial/un-monde-ou-1-ms-vaut-100-m</a></p>
+</li>
+<li>
+<p><a href="http://fr.slideshare.net/ThierryAbalea/un-monde-o-1-ms-vaut-100-m-devoxx-france-2015" class="bare">http://fr.slideshare.net/ThierryAbalea/un-monde-o-1-ms-vaut-100-m-devoxx-france-2015</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_the_ressources_i_used_to_dig_deeper">The ressources I used to dig deeper</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Java Memory Model &amp; cache understanding ressources</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://stackoverflow.com/a/763434/1809195">How does one write code that best utilizes the cpu cache to improve performance - Stackoverflow</a></p>
+</li>
+<li>
+<p><a href="http://lwn.net/Articles/255364/">Ulrich Drepper&#8217;s "What every programmer should know about memory" - Memory part 5: What programmers can do</a></p>
+</li>
+<li>
+<p><a href="http://www.cs.cornell.edu/courses/cs3110/2014sp/lectures/26/memory.html">Memory and Locality - section "Caches"</a></p>
+</li>
+<li>
+<p><a href="http://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html">JSR 133 (Java Memory Model) FAQ - Jeremy Manson and Brian Goetz, February 2004</a></p>
+</li>
+<li>
+<p><a href="http://tutorials.jenkov.com/java-concurrency/java-memory-model.html">Java Memory Model - tutorial by Jakob Jenkov, GREAT RESSOURCE</a></p>
+</li>
+<li>
+<p><a href="http://www.cacheonix.com/articles/Caching_for_Java_Applications.htm">Caching for Java applications - Cacheonix Systems</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="http://fideloper.com/hexagonal-architecture">hexagonal architecture - Fideloper</a></p>
+</li>
+<li>
+<p>Event loop, queues and circular buffer ressources</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blog.mixu.net/2011/02/01/understanding-the-node-js-event-loop/">The node.js event loop</a></p>
+</li>
+<li>
+<p><a href="http://www.infoq.com/articles/High-Performance-Java-Inter-Thread-Communications">Inter-thread communications in Java at the speed of light</a></p>
+</li>
+<li>
+<p><a href="http://mechanical-sympathy.blogspot.fr/2011/09/single-writer-principle.html">The Single Writer Principle - Martin Thompson</a></p>
+</li>
+<li>
+<p><a href="https://github.com/angrave/SystemProgramming/wiki/Synchronization,-Part-8:-Ring-Buffer-Example">System Programming - Synchronisation, Part 8: Ring Buffer Example - Lawrence Angrave</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Circular_buffer">Circular buffer (check the <em>Absolute indices</em> section) - Wikipedia</a></p>
+</li>
+<li>
+<p><a href="http://stackoverflow.com/questions/7890601/circular-buffer-vs-lock-free-stack-to-implement-a-free-list">Circular buffer vs lock-free stack to implement a free list - Stackoverflow</a></p>
+</li>
+<li>
+<p><a href="http://www.blackwasp.co.uk/CircularBuffer_2.aspx">A generic circular buffer</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Volatile ressources</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.javamex.com/tutorials/synchronization_volatile.shtml">The volatile keyword in Java (and all linked pages, GREAT RESSOURCE) - Neil Coffey</a></p>
+</li>
+<li>
+<p><a href="http://stackoverflow.com/questions/17108541/happens-before-relationships-with-volatile-fields-and-synchronized-blocks-in-jav">Happens-before relationships with volatile fields - Stackoverflow</a></p>
+</li>
+<li>
+<p><a href="http://stackoverflow.com/questions/4934913/are-static-variables-shared-between-threads">Are static variables shared between threads - Stackoverflow</a></p>
+</li>
+<li>
+<p><a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.3.1.4">the Java Language Specification - §8.3.4.1 Volatile Fields</a></p>
+</li>
+<li>
+<p><a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4.5">the Java Language Specification - §17.4.5 Happens-before Order</a></p>
+</li>
+<li>
+<p><a href="http://mechanical-sympathy.blogspot.fr/2013/02/cpu-cache-flushing-fallacy.html">CPU cache flushing fallacy - Martin Thompson, especially check the <strong>Concurrent Programming</strong> section</a></p>
+</li>
+<li>
+<p><a href="http://jpbempel.blogspot.fr/2013/05/volatile-and-memory-barriers.html">Volatile and memory barriers - Jean-Philippe Bempel, very good illustration of volatile use preventing reordering, check also the <strong>lasySet</strong> explanation</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/package-summary.html">Description of Java package java.util.concurrent.atomic - especially read the lazySet method description</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Instruction_pipeline">Instruction pipeline - Wikipedia</a></p>
+</li>
+<li>
+<p>Memory-mapped file ressources</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/OpenHFT/Chronicle-Queue">Chronicle-Queue API (formerly Java-Chronicle) - Peter Lawrey</a></p>
+</li>
+<li>
+<p><a href="https://github.com/OpenHFT/Chronicle-Logger">Chronicle-Logger - Peter Lawrey</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Memory-mapped_file">Memory-mapped file - Wikipedia</a></p>
+</li>
+<li>
+<p><a href="http://blog.ippon.fr/2011/11/03/java-acces-directs-a-la-memoire-off-heap/">Accès à la mémoire off-Heap - blog Ippon Technologies</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+        </div>
+
+        <menu>
+            <a href="" id="btn_share" class="btn" title="Share">
+                <span aria-hidden="true" data-icon="S"></span>
+                <strong>Share</strong>
+            </a>
+            <a href="http://twitter.com/share?text=A%20world%20where%201ms%20is%20worth%20100%20millions%20euros&url=https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" id="btn_comment" class="btn" target="_blank">
+                <span aria-hidden="true" data-icon="C"></span> Comment on Twitter
+            </a>
+        </menu>
+
+
+        <footer class="post-footer" role="contentinfo">
+
+            <div class="vcard">
+                <!-- <a href="https://Ardemius.github.io/rss" id="btn_feed" class="btn" title="Feed" target="_blank">
+                    <span aria-hidden="true" data-icon=")"></span>
+                    <strong>Feed</strong>
+                </a> -->
+
+                <a href="" class="photo">
+                    <span style="background-image: url('https://avatars.githubusercontent.com/u/1645190?v=3');">
+                        <img src="https://avatars.githubusercontent.com/u/1645190?v=3" alt="Thomas SCHWENDER">
+                    </span>
+                </a>
+
+                <div class="details">
+                    <h4><a href="" class="url n">Thomas SCHWENDER</a></h4>
+                    Paris, France<br>
+                    
+                </div>
+            </div>
+
+            <div id="user_bio">
+                <div class="inner">
+                    
+                </div>
+            </div>
+
+        </footer>
+
+
+
+
+    </article>
+
+    <div id="share_modal">
+        <div class="wrap">
+            <div class="inner">
+                <header>
+                    Share
+                    <a href="" class="close" title="Close">&times;</a>
+                </header>
+
+                <div class="roon-share-links">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                    <div id="fb-elems">
+                        <div id="fb-root"></div>
+                        <script>(function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=463438580397968";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+                        <div class="fb-like" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
+                    </div>
+
+                    <div id="pinit-btn">
+                        <a href="//pinterest.com/pin/create/button/?url=https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html&amp;description=A%20world%20where%201ms%20is%20worth%20100%20millions%20euros-Inquiring%20Javaist " data-pin-do="buttonPin" data-pin-config="beside"><img src="//assets.pinterest.com/images/pidgets/pin_it_button.png"></a>
+                        <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <a href="https://Ardemius.github.io" id="blog_badge">
+            <span style="background-image: url('https://secure.gravatar.com/avatar/849f00ab4e13e0e8febe4135f0d17052');">Inquiring Javaist</span>
+        </a>
+
+
+    <script>
+
+            function get_text(el) {
+                ret = "";
+                var length = el.childNodes.length;
+                for(var i = 0; i < length; i++) {
+                    var node = el.childNodes[i];
+                    if(node.nodeType != 8) {
+                        ret += node.nodeType != 1 ? node.nodeValue : get_text(node);
+                    }
+                }
+                return ret;
+            }
+            function reading_time () {
+                var post_content = document.getElementById('js-post-content');
+                if (post_content) {
+                    var words = get_text(post_content),
+                        count = words.split(/\s+/).length,
+                        read_time = Math.ceil((count / 150)),
+                        read_time_node = document.createTextNode(read_time + ' min read');
+                    document.getElementById('js-reading-time').appendChild(read_time_node);
+                }
+            }
+
+        function no_schema_links () {
+            var links = document.querySelectorAll('.js-remove-domain-schema');
+            if (links) {
+                for (i = 0; i < links.length; ++i) {
+                    var link = links[i],
+                        text = link.innerHTML,
+                        no_schema = text.replace(/.*?:\/\//g, "");
+                    link.innerHTML = no_schema;
+                }
+            }
+        }
+
+        window.onload = function () {
+            no_schema_links();
+
+            reading_time();
+        }
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+        <script>
+            $(function(){
+                var share_modal = $("#share_modal"),
+                    update_social_links = true;
+
+                $("#btn_share").click(function(){
+                    var that = $(this);
+                    share_modal.fadeIn(200);
+                    return false;
+                });
+
+                share_modal.click(function(e){
+                    if (e.target.className == "wrap" || e.target.id == "share_modal") {
+                        share_modal.fadeOut(200);
+                    }
+                    return false;
+                });
+
+                share_modal.find("div.inner > header > a.close").click(function(){
+                    share_modal.fadeOut(200);
+                    return false;
+                });
+            });
+        </script>
+
+
+
+</body>
+</html>
