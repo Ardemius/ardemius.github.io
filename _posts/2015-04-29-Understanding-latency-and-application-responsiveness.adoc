@@ -1,0 +1,8 @@
+= Understanding latency and application responsiveness
+Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems
+Summary by Thomas SCHWENDER (Softeam StarTech Java)
+:published_at: 2015-04-29
+:hp-tags: Devoxx France 2015, performance, latency
+:imagesdir: ./images
+
+Hi
