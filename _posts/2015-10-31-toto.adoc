@@ -1,3 +1,6 @@
 = toto
 
-first one
+:hp-tags: OpenShift, Fabric8, OSX
+:numbered:
+
+NOTE: testing
