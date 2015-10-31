@@ -1,4 +1,4 @@
-= toto
+= Test with admonition icons
 
 :hp-tags: OpenShift, Fabric8, OSX
 :numbered:
