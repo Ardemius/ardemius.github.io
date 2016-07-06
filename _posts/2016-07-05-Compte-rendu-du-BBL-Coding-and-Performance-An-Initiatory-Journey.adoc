@@ -1,0 +1,147 @@
+= Compte rendu du BBL Coding & Performance, An Initiatory Journey
+:published_at: 2016-07-05
+:hp-tags: BBL, performance, quality
+:toc:
+:toclevels: 3
+:toc-placement: preamble
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:stem:
+:source-highlighter: highlightjs
+
+Présenté par Jean-Philippe BEMPEL (architecte performance chez Ullink) en 12@13 à Softeam, le 05/07/2016.
+
+image::BBL_coding-performance/bbl_coding-perf.jpg[]
+
+== 1) Rules of thumb
+
+On commence par un avertissement :
+
+[WARNING]
+====
+Attention aux règles empiriques que l'on applique sans savoir pourquoi, car héritées des "anciens du projet"... +
+-> Il faut toujours vérifier si elles sont toujours d'actualité !
+====
+
+Les *évolutions du JIT* ont remplacé bon nombre de ces anciennes règles.
+
+Exemple du `toArray` pour les collections : 
+
+image::BBL_coding-performance/bbl_coding-perf_rules-of-thumb.png[title="rule of thumb sur le toArray des collections"]
+
+Malgré ce qu'on pourrait croire, entre les solutions 2 et 3, c'est la 2e la plus rapide. +
+Les dernières versions de Java permettent maintenant d'éviter l'initialisation des éléments du tableau à 0 dans ce cas.
+
+Jean-Philippe nous rappelle également que le JIT marche beaucoup par *pattern matching* (reconnaissance de patterns de codage).
+
+Voir la http://zeroturnaround.com/wp-content/uploads/2016/05/Java-8-cheat-sheet-by-RebelLabs.png[Cheat Sheet sur les Best Practices Java 8 de RebelLabs] pour un exemple de rules of thumb actuelles.
+
+== 2) Algo et complexité 
+
+De nouveau la comparaison entre `LinkedList` et `ArrayList`, en stem:[O(k1 \times n)] et stem:[O(k2 \times n)], mais avec *stem:[k1 > k2]* du fait du cache de nos processeurs modernes. +
+Pour ceux qui étaient présents à Devoxx France 2016, Rémi FORAX et José PAUMARD avaient déjà abordé ce sujet.
+
+[IMPORTANT]
+====
+Morale de l'histoire : les constantes COMPTENT !
+====
+
+== 3) Les ordres de grandeur
+
+image::BBL_coding-performance/bbl_coding-perf_orders-of-magnitude.png[title="Ordres de grandeur"]
+
+Concernant les *latences mémoires*, les ordres de grandeur sont particulièrement importants car :
+
+* ils permettent de *catégoriser les problèmes rencontrés*, +
+-> une latence inattendu de 30 ms n'est pas un problème de cache...
+* et de *bien choisir ses batailles*. +
+-> passer 6 mois à améliorer les perfs de 5% alors que l'on sait que les serveurs vont être changés à ce moment (30% de gain de performance dans l'exemple donné par Jean-Philippe), n'est pas productif.
+
+image::BBL_coding-performance/bbl_coding-perf_orders-of-magnitude-tab.png[title="Comparaison des latences mémoire"]
+
+Suite à quoi, Jean-Philippe nous a "piégés" avec le problème suivant :
+
+[source,java]
+----
+{
+	DBConnection dbConnection = DBConnection.getInstance();
+	List<Client> activeClients = fetchActiveClients(dbConnection);
+}
+----
+
+Question : 
+____
+Qu'est-ce qui peut poser problème ?"
+____
+Réponse de la salle : 
+____
+le singleton, le singleton, le singleton !!!!
+____
+(OK, j'exagère un petit peu... emoji:wink[2x] )
+
+Nous nous lançons dans une grande explication sur le singleton, le *Double Check Locking*, et... et il n'y a *pas d'index* sur les tables clients... +
+Ce qui est bien plus pénalisant qu'un problème de singleton !
+
+[IMPORTANT]
+====
+Une fois de plus : choisissez bien vos batailles !
+====
+
+Pour la peine, j'en profite pour redonner la solution du *singleton en environnement multithreadé* avec un `volatile`:
+
+image::BBL_coding-performance/bbl_coding-perf_orders-of-magnitude-exemple.png[title="singleton multithread avec volatile"]
+
+== 4) Benchmark 
+
+IMPORTANT: L'avis de Jean-Philippe : il est très, *très*, *TRES difficile* de réaliser un benchmark correct.
+
+Si vous devez en faire un, utilisez *JMH* (Java Microbenchmark Harness), et *rien d'autre* !
+
+Et, même dans ce cas, soyez prudents ! +
+Le *micro-benchmark* implique un *espace de travail TRES restreint*, qui ne *correspond PAS à la réalité* !
+
+NOTE: Conseil de Jean-Philippe : Dans la mesure du possible, préférez des macro-benchmarkd avec des *données réelles* (obtenir ces dernières n'est pas toujours évident).
+
+== 5) Optimisation prématurée
+
+[quote, Donald E. Knuth]
+Premature optimization is the root of all evil!
+
+[CAUTION]
+====
+Le conseil à retenir absolument :
+
+* Measure, don't guess!
+* Measure, don't premature!
+====
+
+== Conclusion 
+
+____
+What is good performance engineer?
+____
+-> C'est un ingénieur qui, avant toute autre chose, se demande si le temps qu'il va passer à son optimisation en vaut vraiment la peine. (*équation économique*)
+
+== Ressources
+
+* Le Twitter "technique" de Jean-Philippe : @jpbempel
+* Son blog, orienté performance lui-aussi : http://jpbempel.blogspot.fr/
+* https://channel9.msdn.com/Events/Build/2014/2-661[Modern C++: What you need to know] - Herb Sutter
+* http://shipilev.net/blog/2014/safe-public-construction/[Safe Publication and Safe Initialization in Java] - Aleksey Shipilev
+* http://openjdk.java.net/projects/code-tools/jmh/[JMH] (Java Microbenchmark Harness)
+* http://mechanical-sympathy.blogspot.fr/[Mechanical sympathy] - Martin Thompson
+
+
+
+
+
+
+
+
+
+
+
+
+
+
