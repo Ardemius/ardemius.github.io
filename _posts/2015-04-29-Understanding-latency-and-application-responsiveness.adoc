@@ -1,6 +1,10 @@
 = Understanding latency and application responsiveness
 :published_at: 2015-04-29
 :hp-tags: Devoxx France 2015, performance, latency
+:toc:
+:toclevels: 3
+:toc-placement: preamble
+:lb: pass:[<br> +]
 :imagesdir: ./images
 
 Presented at Devoxx France 2015 by Gil Tene, CTO of Azul Systems +
