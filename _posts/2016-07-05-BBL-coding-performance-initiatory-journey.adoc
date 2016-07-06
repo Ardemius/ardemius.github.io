@@ -1,6 +1,6 @@
 = Compte rendu du BBL Coding & Performance, An Initiatory Journey
 :published_at: 2016-07-05
-:hp-tags: Devoxx France 2015, Git, migration
+:hp-tags: BBL, performance, quality
 :toc:
 :toclevels: 3
 :toc-placement: preamble
