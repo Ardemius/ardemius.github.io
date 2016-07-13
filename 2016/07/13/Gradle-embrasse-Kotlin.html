@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Gradle embrasse Kotlin</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//Ardemius.github.io/themes/ichi/favicon.ico">
+
+    <script type="text/javascript" src="//Ardemius.github.io/themes/ichi/assets/js/vendor/fastclick.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//Ardemius.github.io/themes/ichi/assets/js/vendor/modernizr.js?v=1.0.0"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/css/normalize.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/css/foundation.min.css?v=1.0.0" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/css/outdatedBrowser.min.css?v=1.0.0">
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/fonts/foundation-icons/foundation-icons.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/css/styles.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:300,700,400|Source+Sans+Pro:300,400,600,700,900,300italic,400italic,600italic,700italic,900italic" />
+
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="//Ardemius.github.io/themes/ichi/assets/css/asciidoctor.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html" />
+    
+    <meta property="og:site_name" content="Inquiring Javaist" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Gradle embrasse Kotlin" />
+    <meta property="og:description" content="Voici une nouvelle qui sur le coup m&amp;#8217;a réellement laissé perplexe&amp;#8230;&amp;#8203; Jusqu&#x27;à maintenant, Gradle utilisait uniquement Groovy comme langage pour ses builds, et je ne voyais pas de raisons pour lesquelles cela changerait, ce dernier me..." />
+    <meta property="og:url" content="https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html" />
+    <meta property="article:published_time" content="2016-07-12T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2016-07-13T14:40:14.867Z" />
+    <meta property="article:tag" content="Gradle" />
+    <meta property="article:tag" content="Groovy" />
+    <meta property="article:tag" content="Kotlin" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Gradle embrasse Kotlin" />
+    <meta name="twitter:description" content="Voici une nouvelle qui sur le coup m&amp;#8217;a réellement laissé perplexe&amp;#8230;&amp;#8203; Jusqu&#x27;à maintenant, Gradle utilisait uniquement Groovy comme langage pour ses builds, et je ne voyais pas de raisons pour lesquelles cela changerait, ce dernier me..." />
+    <meta name="twitter:url" content="https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Inquiring Javaist",
+    "author": {
+        "@type": "Person",
+        "name": "Thomas SCHWENDER",
+        "image": "https://avatars.githubusercontent.com/u/1645190?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "Gradle embrasse Kotlin",
+    "url": "https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html",
+    "datePublished": "2016-07-12T22:00:00.000Z",
+    "dateModified": "2016-07-13T14:40:14.867Z",
+    "keywords": "Gradle,  Groovy,  Kotlin",
+    "description": "Voici une nouvelle qui sur le coup m&amp;#8217;a réellement laissé perplexe&amp;#8230;&amp;#8203; Jusqu&#x27;à maintenant, Gradle utilisait uniquement Groovy comme langage pour ses builds, et je ne voyais pas de raisons pour lesquelles cela changerait, ce dernier me..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Inquiring Javaist" href="https://Ardemius.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-Gradle tag-Groovy tag-Kotlin">
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdate" href="http://outdatedbrowser.com/">Update my browser now</a></p>
+</div>
+
+<nav class="top-bar hide-for-large-up" data-topbar >
+  <ul class="title-area">
+    <li class="name">
+
+    </li>
+    <li class="home"><a class="fi-home" href="https://Ardemius.github.io"></a></li>
+    <li class="toggle-topbar"><a href="#" id="trigger-overlay" class="fi-list"></a></li>
+  </ul>
+
+<div class="overlay overlay-scale">
+    <button type="button" class="overlay-close">Close</button>
+    <nav>
+        <ul>
+            <li><a href="https://Ardemius.github.io">Home</a></li>
+        </ul>
+    </nav>
+</div>
+
+</nav>
+
+<div class="row">
+
+<div class="small-16 medium-16 large-4 columns right head-area" >
+
+<header class="site-head">
+    <div class="vertical">
+        <div class="site-head-content inner">
+            <ul class="side-nav blog-menu show-for-large-up">
+                <li><a class="fi-home" href="https://Ardemius.github.io"></a></li>
+                <li><a class="fi-torso" href="https://Ardemius.github.io/about"></a></li>
+                <li><a class="fi-mail" href="https://Ardemius.github.io/contact"></a></li>
+            </ul>
+            <a class="blog-logo" href="https://Ardemius.github.io"><img alt="Inquiring Javaist" src="https://secure.gravatar.com/avatar/849f00ab4e13e0e8febe4135f0d17052" alt="Blog Logo" /></a>
+            <h1 class="blog-title">Inquiring Javaist</h1>
+            <hr>
+            <p class="blog-description">Nothing is better than looking under the hood to understand how things are working.</p>
+            <div class="blog-network">
+<!--                 <a href="#" class="fi-social-pinterest"></a>
+                <a href="#" class="fi-social-linkedin"></a>
+                <a href="#" class="fi-social-behance"></a>
+                <a href="#" class="fi-social-deviant-art"></a>
+                <a href="#" class="fi-social-dribbble"></a>
+                <a href="#" class="fi-social-flickr"></a>
+                <a href="#" class="fi-social-github"></a>
+                <a href="#" class="fi-social-skype"></a>
+                <a href="#" class="fi-social-snapchat"></a>
+                <a href="#" class="fi-social-steam"></a>
+                <a href="#" class="fi-social-xbox"></a>
+                <a href="#" class="fi-social-reddit"></a> -->
+                  <a href="https://github.com/Ardemius/" class="fi-social-github"></a>
+                  <a href="@thomasSCHWENDER" class="fi-social-twitter"></a>
+            </div>
+        </div>
+    </div>
+</header>
+
+</div>
+
+
+<div class="small-16 medium-16 large-12 columns main-column left">
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-Gradle tag-Groovy tag-Kotlin">
+
+
+            <h1 class="post-title">Gradle embrasse Kotlin</h1>
+
+            <span class="post-meta label"><time datetime="2016-07-13">13 Jul 2016</time></span>
+
+            <section class="post-content">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Voici une nouvelle qui sur le coup m&#8217;a réellement laissé perplexe&#8230;&#8203;<br>
+Jusqu'à maintenant, <strong>Gradle utilisait uniquement Groovy comme langage pour ses builds</strong>, et je ne voyais pas de raisons pour lesquelles cela changerait, ce dernier me semblant très bien répondre aux différents besoins de Gradle.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Aussi, lors de l&#8217;annonce du support de <a href="https://kotlinlang.org/">Kotlin</a>, je me suis vraiment demandé : <strong>mais pourquoi ?</strong>
+Comme tout nouveau langage de programmation, Kotlin vient avec son lot de nouveautés, y en avait-il une justifiant cette adoption ?
+Après quelques recherches (voir le <a href="https://dzone.com/articles/few-thoughts-about-kotlin-and-why-i-like-it-so-muc">très bon article de DZone</a> dans les ressources), on se rend vite compte que le langage semble bien conçu, mais ne propose rien de réellement révolutionnaire (surtout comparé à un Groovy) :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>il tourne sur la JVM</p>
+</li>
+<li>
+<p>est typé statiquement</p>
+</li>
+<li>
+<p>semble très bien interagir avec les librairies et le code Java déjà existants</p>
+</li>
+<li>
+<p>supporte <a href="https://fr.wikipedia.org/wiki/Inf%C3%A9rence_de_types">l&#8217;inférence de type</a></p>
+</li>
+<li>
+<p>supporte les structures de données mutables <strong>et</strong> immutables sans prendre parti</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Autant des choses que permet déjà Groovy (ou peu s&#8217;en faut).</p>
+</div>
+<div class="paragraph">
+<p>Alors pourquoi ? Pourquoi une société comme Gradle irait dépenser un temps de développement, certainement non négligeable, pour ajouter le support d&#8217;une nouveau langage à son produit ?</p>
+</div>
+<div class="paragraph">
+<p>La réponse est finalement donné dans <a href="https://lescastcodeurs.com/2016/06/20/lcc-149-en-direct-du-web2day-sans-toit-ni-lua/">l'épisode 149 des Cast Codeurs</a>, par Cédric Champeau, core developer chez Gradle (mais également commiter Groovy).<br>
+<strong>Kotlin est développé par JetBrains</strong>, l'éditeur d&#8217;IntelliJ, ce qui assure un <strong>parfait support du langage au sein d&#8217;IntelliJ, mais aussi d&#8217;Eclipse</strong> (si si !).<br>
+De son côté, <strong>Groovy n&#8217;est plus financé par Pivotal</strong> (l'éditeur du framework Spring) depuis avril 2015. Or c&#8217;est également <strong>Pivotal qui assurait le développement du plugin Groovy pour Eclipse</strong>. Depuis le départ de ces derniers, le plugin n&#8217;est plus maintenu.
+Et Gradle est bien conscient que l&#8217;adoption de son produit est fortement conditionnée par une bonne expérience de développement.</p>
+</div>
+<div class="paragraph">
+<p>Bon, à côté de cela, il semble qu&#8217;il y ait également des intérêts purement techniques à ce support de Kotlin :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>un support facilité au niveau de l&#8217;IDE</strong></p>
+</li>
+<li>
+<p><strong>et la performance</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Concernant le 1er point, comme expliqué sur le <a href="https://melix.github.io/blog/2016/05/gradle-kotlin.html">blog de Cédric</a>, <strong>le support d&#8217;un langage dynamique</strong> (dynamic DSL) <strong>comme Groovy peut s&#8217;avérer complexe</strong>, dans la mesure où de (trop) nombreux éléments sont uniquement découverts au runtime, ce qui ne facilite pas le travail de l&#8217;IDE.<br>
+<strong>Kotlin étant purement typé statiquement</strong>, ce problème n&#8217;existe plus.</p>
+</div>
+<div class="paragraph">
+<p>Concernant le 2nd point, Groovy souffre d&#8217;un choix historique : <strong>gérer le flux de résolution des properties via un méchanisme d&#8217;exception</strong>.<br>
+On peut donc rapidement se retrouver face à des dizaines de milliers d&#8217;exceptions lancées pour&#8230;&#8203; pas grand chose. Là aussi, regardez le blog de Cédric pour une explication détaillée.</p>
+</div>
+<div class="paragraph">
+<p>Au final, et même si on nous assure que le support de Groovy n&#8217;est pas abandonné, on sent que Kotlin, une fois qu&#8217;il aura passé la phase d&#8217;incubation, a de grandes chances de devenir le langage phare pour les builds Gradle.<br>
+A partir de là, pourquoi ne pas commencer dès maintenant à y jeter un oeil ?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ressources">Ressources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://gradle.org/blog/kotlin-meets-gradle/" class="bare">https://gradle.org/blog/kotlin-meets-gradle/</a> : la news officielle du blog de Gradle</p>
+</li>
+<li>
+<p><a href="https://lescastcodeurs.com/2016/06/20/lcc-149-en-direct-du-web2day-sans-toit-ni-lua/" class="bare">https://lescastcodeurs.com/2016/06/20/lcc-149-en-direct-du-web2day-sans-toit-ni-lua/</a> : l'épisode 149 des Cast Codeurs sur le sujet (allez à la 41')</p>
+</li>
+<li>
+<p><a href="https://gradle.org/blog/gradle-3-0-m1-unleash-the-daemon/" class="bare">https://gradle.org/blog/gradle-3-0-m1-unleash-the-daemon/</a> : l&#8217;annonce de la sortie de Gradle 3.0 M1 par Gradle. Il est question de Kotlin, et de l'<strong>activation par défaut du Gradle Daemon</strong> (juste pour information)</p>
+</li>
+<li>
+<p><a href="https://melix.github.io/blog/2016/05/gradle-kotlin.html">Gradle embraces Kotlin, what about Groovy?</a> : l&#8217;article du blog de <strong>Cédric Champeau</strong> sur le support de Kotlin par Gradle</p>
+</li>
+<li>
+<p><a href="https://dzone.com/articles/few-thoughts-about-kotlin-and-why-i-like-it-so-muc">A Few Thoughts About Kotlin and Why I Like It So Much</a> : un article sur DZone détaillant les caractéristiques et avantages (d&#8217;après l&#8217;auteur bien sûr) de Kotlin par rapport à des langages comme Java, Python, Groovy, Erlang, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+                        <aside class="tags fi-pricetag-multiple">Posted on <a href="https://Ardemius.github.io/tag/Gradle">Gradle</a>, <a href="https://Ardemius.github.io/tag/Groovy"> Groovy</a>, <a href="https://Ardemius.github.io/tag/Kotlin"> Kotlin</a></aside>
+            </section>
+            <hr>
+            <footer class="post-footer">
+
+                <section class="share">
+                    <h4>Liked this post ? Share it.</h4>
+                    <a class="fi-social-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html"
+                        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    </a>
+                    <a class="fi-social-twitter" href="https://twitter.com/share?text=Gradle%20embrasse%20Kotlin&amp;url=https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html"
+                        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    </a>
+                    <a class="fi-social-google-plus" href="https://plus.google.com/share?url=https://Ardemius.github.io/2016/07/13/Gradle-embrasse-Kotlin.html"
+                       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    </a>
+                </section>
+
+                <section class="author">
+                    <header>
+                        <span>About the author</span>
+                    </header>
+                    <section>
+                        <h4>Thomas SCHWENDER</h4>
+                        <img src="https://avatars.githubusercontent.com/u/1645190?v=3">
+                        <span>Paris, France</span>
+                        
+                    </section>
+                    <footer>
+                         <p></p>
+                    </footer>
+                </section>
+
+        <div class="clearfix"></div>
+                    <hr>
+
+            </footer>
+
+        <h3 class="title-disqus"><span class="fi-comments"></span>Discussions</h3>
+
+
+
+
+    </article>
+
+</main>
+
+</div>
+
+</div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <!--[if lte IE 8]>
+        <script type="text/javascript" src="//Ardemius.github.io/themes/ichi/assets/js/outdatedBrowser.min.js?v=1.0.0"></script>
+    <![endif]-->
+    <script type="text/javascript" src="//Ardemius.github.io/themes/ichi/assets/js/min/built.js?v=1.0.0"></script>
+
+    <script>
+      $(document).foundation();
+    </script>
+
+</body>
+</html>
