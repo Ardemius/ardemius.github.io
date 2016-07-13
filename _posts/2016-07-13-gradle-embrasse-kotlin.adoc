@@ -1,0 +1,55 @@
+= Gradle embrasse Kotlin
+:published_at: 2016-07-13
+:hp-tags: Gradle, Groovy, Kotlin
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:stem:
+:source-highlighter: highlightjs
+
+// We use an OpenBlock to avoid the lead style for the 1st paragraph
+--
+Voici une nouvelle qui sur le coup m'a réellement laissé perplexe... +
+Jusqu'à maintenant, *Gradle utilisait uniquement Groovy comme langage pour ses builds*, et je ne voyais pas de raisons pour lesquelles cela changerait, ce dernier me semblant très bien répondre aux différents besoins de Gradle.
+--
+
+Aussi, lors de l'annonce du support de https://kotlinlang.org/[Kotlin], je me suis vraiment demandé : *mais pourquoi ?*
+Comme tout nouveau langage de programmation, Kotlin vient avec son lot de nouveautés, y en avait-il une justifiant cette adoption ?
+Après quelques recherches (voir le https://dzone.com/articles/few-thoughts-about-kotlin-and-why-i-like-it-so-muc[très bon article de DZone] dans les ressources), on se rend vite compte que le langage semble bien conçu, mais ne propose rien de réellement révolutionnaire (surtout comparé à un Groovy) :
+
+* il tourne sur la JVM
+* est typé statiquement
+* semble très bien interagir avec les librairies et le code Java déjà existants
+* supporte https://fr.wikipedia.org/wiki/Inf%C3%A9rence_de_types[l'inférence de type]
+* supporte les structures de données mutables *et* immutables sans prendre parti
+
+Autant des choses que permet déjà Groovy (ou peu s'en faut).
+
+Alors pourquoi ? Pourquoi une société comme Gradle irait dépenser un temps de développement, certainement non négligeable, pour ajouter le support d'une nouveau langage à son produit ?
+
+La réponse est finalement donné dans https://lescastcodeurs.com/2016/06/20/lcc-149-en-direct-du-web2day-sans-toit-ni-lua/[l'épisode 149 des Cast Codeurs], par Cédric Champeau, core developer chez Gradle (mais également commiter Groovy). +
+*Kotlin est développé par JetBrains*, l'éditeur d'IntelliJ, ce qui assure un *parfait support du langage au sein d'IntelliJ, mais aussi d'Eclipse* (si si !). +
+De son côté, *Groovy n'est plus financé par Pivotal* (l'éditeur du framework Spring) depuis avril 2015. Or c'est également *Pivotal qui assurait le développement du plugin Groovy pour Eclipse*. Depuis le départ de ces derniers, le plugin n'est plus maintenu.
+Et Gradle est bien conscient que l'adoption de son produit est fortement conditionnée par une bonne expérience de développement.
+
+Bon, à côté de cela, il semble qu'il y ait également des intérêts purement techniques à ce support de Kotlin : 
+
+* *un support facilité au niveau de l'IDE*
+* *et la performance*
+
+Concernant le 1er point, comme expliqué sur le https://melix.github.io/blog/2016/05/gradle-kotlin.html[blog de Cédric], *le support d'un langage dynamique* (dynamic DSL) *comme Groovy peut s'avérer complexe*, dans la mesure où de (trop) nombreux éléments sont uniquement découverts au runtime, ce qui ne facilite pas le travail de l'IDE. +
+*Kotlin étant purement typé statiquement*, ce problème n'existe plus.
+
+Concernant le 2nd point, Groovy souffre d'un choix historique : *gérer le flux de résolution des properties via un méchanisme d'exception*. +
+On peut donc rapidement se retrouver face à des dizaines de milliers d'exceptions lancées pour... pas grand chose. Là aussi, regardez le blog de Cédric pour une explication détaillée.
+
+Au final, et même si on nous assure que le support de Groovy n'est pas abandonné, on sent que Kotlin, une fois qu'il aura passé la phase d'incubation, a de grandes chances de devenir le langage phare pour les builds Gradle. +
+A partir de là, pourquoi ne pas commencer dès maintenant à y jeter un oeil ?
+
+== Ressources
+
+* https://gradle.org/blog/kotlin-meets-gradle/ : la news officielle du blog de Gradle
+* https://lescastcodeurs.com/2016/06/20/lcc-149-en-direct-du-web2day-sans-toit-ni-lua/ : l'épisode 149 des Cast Codeurs sur le sujet (allez à la 41')
+* https://gradle.org/blog/gradle-3-0-m1-unleash-the-daemon/ : l'annonce de la sortie de Gradle 3.0 M1 par Gradle. Il est question de Kotlin, et de l'*activation par défaut du Gradle Daemon* (juste pour information)
+* https://melix.github.io/blog/2016/05/gradle-kotlin.html[Gradle embraces Kotlin, what about Groovy?] : l'article du blog de *Cédric Champeau* sur le support de Kotlin par Gradle
+* https://dzone.com/articles/few-thoughts-about-kotlin-and-why-i-like-it-so-muc[A Few Thoughts About Kotlin and Why I Like It So Much] : un article sur DZone détaillant les caractéristiques et avantages (d'après l'auteur bien sûr) de Kotlin par rapport à des langages comme Java, Python, Groovy, Erlang, etc.
