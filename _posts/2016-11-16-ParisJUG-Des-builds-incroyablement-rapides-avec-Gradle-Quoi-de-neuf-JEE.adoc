@@ -1,0 +1,107 @@
+= CR du ParisJUG 2016/11/15 - Des builds incroyablement rapide avec Gradle & Quoi de neuf JEE ?
+:published_at: 2016-11-16
+:hp-tags: Gradle, JEE
+:toc: macro
+:toclevels: 3
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:source-highlighter: highlightjs
+
+toc::[]
+
+== Des builds incroyablement rapide avec Gradle 3
+
+Par Cédric CHAMPEAU (https://twitter.com/cedricchampeau[@CedricChampeau]) - Gradle
+
+Commençons par quelques news :
+
+* *Gradle 3* est disponible (version 3.2 sortie le 2016/11/14)
+* *Gradle 4* est prévu pour début 2017
+
+*Gradle (3.x)* se définit maintenant par :
+
+* *un outil de build* : celui que vous récupérez de https://gradle.org/
+* [red]*des services en ligne (Gradle Cloud Services)* (faut bien manger !) : accessibles depuis https://gradle.com/
+
+== Les forces de Gradle 3
+
+=== Gradle Daemon
+
+* *Beaucoup plus stable depuis la version 3* (plus de lock sur le rep `build` ! On va enfin pouvoir le supprimer sans avoir besoin de redémarrer...)
+* Après quelques run (merci le JIT), on gagne plus de 50% de temps de build.
+
+=== Outils de profiling
+
+* `gradle --profile` : l'historique, avec déjà quelques infos, mais limitées et difficilement partageables
+* *service en ligne* : https://gradle.com/[*build scans*] +
+Le nouvel outil, cloud, bien plus performant. Voir https://scans.gradle.com/s/ly5tnqtuoqlwe ou https://scans.gradle.com/s/mltba5qnktegg pour des exemples de build scan. +
+Pour l'utiliser, il faut ajouter le plugin `com.gradle.build-scan` à son `build.gradle`, et builder avec `-Dscan`. +
+Les données d'analyse sont collectées au cours du build, *PUIS* envoyées en *1 fois* au service dans le cloud. +
+Pour celles ou ceux qui renaclent à aller sur le cloud, il est toujours possible https://gradle.com/enterprise[d'installer ces services sur un serveur en interne].
+
+=== Builds incrémentaux
+
+Gradle permet de *redéfinir les entrées / sorties de toutes les tâches* (`@InputFile` et `@OutputFile`), ce qui lui permet de gérer des builds *incrémentaux* :
+ 
+* Si la tâche n'a pas encore donné d'output, c'est donc qu'il faut la lancer. 
+* Si, par contre, un output existe, et que les entrées sont les mêmes, cette tâche n'a pas besoin d'être relancée.
+
+=== Compilation incrémentale
+
+Ce type de compilation est disponible, comme sous Eclipse. +
+Gradle connaissant toutes les dépendances entre classes, et peut donc le faire, ce qui n'est pas le cas de javac. Peut complètement être utilisé, même si expérimentale.
+
+=== continuous build
+
+ Avec l'option -t. Exemple :
+ Gradle -t Asciidoctor
+ - composite build : la killer feature de Gradle
+ Permet de gérer le mono ou multi repo (1 seul repo Git contenant 36 000 sous-projets)
+ Peut remplacer une dépendance binaire par une dépendance source !!!!
+ Pour débugger une dep problématique, c'est juste énorme.
+ Valable aussi pour les dep transitives, via le graphe de dépendances.
+ Se sert du fichier settings.gradle pour déclarer les builds multi-modules, ou utilise le flag --includeBuild
+ Permet d'exploser les monolith en multi-modules
+
+=== task output cache (pour Gradle 4)
+
+ Pour partager le résultat d'un build sur le réseau (comme ça le voisin ne perdra pas 25 min sur son build si vous l'avez déjà fait !)
+ Moins de compilation, meilleur pour la planète (GreenIT à communiquer)
+
+- la perf est une des priorités de Gradle (voir photo)
+ - sources sur GitHub
+
+Voir detached configuration pour éviter la résolution de la configuration.
+
+=== Ressources
+
+* Slides et code de la présentation : https://github.com/melix/parisjug-fast-builds
+* La documentation de Gradle : http://gradle.org/documentation 
+
+== JEE quoi de neuf ? 
+
+Par Charles SABOURDIN et José PAUMARD
+
+Retour sur les annonces de JavaOne et Devoxx BE
+
+Actuellement, on peut faire du JEE 7 avec une jvm 8
+ Voir les graphes
+Https://javaee-guardians.io/lack-of-java-ee-8-progress/
+ Mais, gaffe, tous viennent du fondateur de Java ee guardian, un ancien évangéliste JEE
+
+JEE semble quand même toujours très suivi, avec beaucoup de refs, de docs et de livres associés.
+
+JavaOne : sur 450 prez, 50+ sur JEE
+
+JEE 8 :
+ - Jcache n'avance pas des masses (tout une histoire)
+- JSONB : binding pour Json fortement demandé
+
+On va avoir dans la foulée les sorties de JEE 8 et 9 (en quelques mois)
+
+On commence à avoir un grand écart entre les JEE et les JSE (grosse désynchronisation)
+
+JEE : regrouper ce qui marche bien, pour proposer un standard (exemple avec Hibernate et CDI), dans cet ordre.
+ C'est un organe "en retrait"
+
