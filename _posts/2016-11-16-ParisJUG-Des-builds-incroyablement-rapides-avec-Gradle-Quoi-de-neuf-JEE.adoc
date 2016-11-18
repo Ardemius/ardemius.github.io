@@ -49,8 +49,23 @@ Gradle permet de *redéfinir les entrées / sorties de toutes les tâches* (`@In
 
 === Compilation incrémentale
 
-Ce type de compilation est disponible, comme sous Eclipse. +
-Gradle connaissant toutes les dépendances entre classes, et peut donc le faire, ce qui n'est pas le cas de javac. Peut complètement être utilisé, même si expérimentale.
+Ce type de compilation est disponible (un peu comme sous Eclipse). +
+Gradle connaissant toutes les dépendances entre classes, il peut donc l'utiliser, *contrairement à `javac`*. +
+Et, même si encore expérimentale, elle est *stable*.
+
+Elle s'active via la configuration de la task `JavaCompile`:
+
+[source,gradle]
+----
+apply plugin: 'java'
+compileJava {
+    //enable compilation in a separate daemon process
+    options.fork = true
+
+    //enable incremental compilation
+    options.incremental = true
+}
+----
 
 === continuous build
 
