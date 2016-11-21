@@ -1,5 +1,5 @@
 = CR du ParisJUG 2016/11/15 - Des builds incroyablement rapide avec Gradle & Quoi de neuf JEE ?
-:published_at: 2016-11-16
+:published_at: 2016-11-21
 :hp-tags: Gradle, JEE
 :toc: macro
 :toclevels: 3
@@ -24,34 +24,37 @@ Commençons par quelques news :
 * *un outil de build* : celui que vous récupérez de https://gradle.org/
 * [red]*des services en ligne (Gradle Cloud Services)* (faut bien manger !) : accessibles depuis https://gradle.com/
 
-== Les forces de Gradle 3
+=== Les forces de Gradle 3
 
-=== Gradle Daemon
+==== Gradle Daemon
 
 * *Beaucoup plus stable depuis la version 3* (plus de lock sur le rep `build` ! On va enfin pouvoir le supprimer sans avoir besoin de redémarrer...)
 * Après quelques run (merci le JIT), on gagne plus de 50% de temps de build.
 
-=== Outils de profiling
+==== Outils de profiling
 
 * `gradle --profile` : l'historique, avec déjà quelques infos, mais limitées et difficilement partageables
 * *service en ligne* : https://gradle.com/[*build scans*] +
 Le nouvel outil, cloud, bien plus performant. Voir https://scans.gradle.com/s/ly5tnqtuoqlwe ou https://scans.gradle.com/s/mltba5qnktegg pour des exemples de build scan. +
 Pour l'utiliser, il faut ajouter le plugin `com.gradle.build-scan` à son `build.gradle`, et builder avec `-Dscan`. +
 Les données d'analyse sont collectées au cours du build, *PUIS* envoyées en *1 fois* au service dans le cloud. +
-Pour celles ou ceux qui renaclent à aller sur le cloud, il est toujours possible https://gradle.com/enterprise[d'installer ces services sur un serveur en interne].
+Pour celles ou ceux qui renaclent à aller sur le cloud, il est toujours possible https://gradle.com/enterprise[d'installer ces services sur un serveur en interne]. +
+Voici quelques exemples de build scans : 
++
+image::ParisJUG_Gradle-JEE/ParisJUG_Gradle_build-scan.jpg[width="600"]
 
-=== Builds incrémentaux
+==== Builds incrémentaux
 
 Gradle permet de *redéfinir les entrées / sorties de toutes les tâches* (`@InputFile` et `@OutputFile`), ce qui lui permet de gérer des builds *incrémentaux* :
  
 * Si la tâche n'a pas encore donné d'output, c'est donc qu'il faut la lancer. 
 * Si, par contre, un output existe, et que les entrées sont les mêmes, cette tâche n'a pas besoin d'être relancée.
 
-=== Compilation incrémentale
+==== Compilation incrémentale
 
 Ce type de compilation est disponible (un peu comme sous Eclipse). +
 Gradle connaissant toutes les dépendances entre classes, il peut donc l'utiliser, *contrairement à `javac`*. +
-Et, même si encore expérimentale, elle est *stable*.
+Et, même si encore expérimentale, elle est *stable* et permet des gains de performance non négligeables.
 
 Elle s'active via la configuration de la task `JavaCompile`:
 
@@ -59,64 +62,116 @@ Elle s'active via la configuration de la task `JavaCompile`:
 ----
 apply plugin: 'java'
 compileJava {
-    //enable compilation in a separate daemon process
-    options.fork = true
-
     //enable incremental compilation
     options.incremental = true
 }
 ----
 
-=== continuous build
+==== Continuous build
 
- Avec l'option -t. Exemple :
- Gradle -t Asciidoctor
- - composite build : la killer feature de Gradle
- Permet de gérer le mono ou multi repo (1 seul repo Git contenant 36 000 sous-projets)
- Peut remplacer une dépendance binaire par une dépendance source !!!!
- Pour débugger une dep problématique, c'est juste énorme.
- Valable aussi pour les dep transitives, via le graphe de dépendances.
- Se sert du fichier settings.gradle pour déclarer les builds multi-modules, ou utilise le flag --includeBuild
- Permet d'exploser les monolith en multi-modules
+Ce type de build *écoute en continue les changements dans les inputs des tasks*.
 
-=== task output cache (pour Gradle 4)
+Activable avec l'option `-t`. Exemple :
 
- Pour partager le résultat d'un build sur le réseau (comme ça le voisin ne perdra pas 25 min sur son build si vous l'avez déjà fait !)
- Moins de compilation, meilleur pour la planète (GreenIT à communiquer)
+[source,gradle]
+----
+Gradle -t Asciidoctor
+----
 
-- la perf est une des priorités de Gradle (voir photo)
- - sources sur GitHub
+Dans l'exemple précédent, utilisé par Cédric pour builder les slides de sa présentation, le code Asciidoctor de la présentation est, à chaque modification, rebuilder pour générer la nouvelle version des slides.
 
-Voir detached configuration pour éviter la résolution de la configuration.
+==== Composite build : la *killer feature* de Gradle
+
+Pour Cédric, il s'agit de *LA* killer feature de Gradle 3.x.
+
+Quelques rappels :
+
+* *mono-repo* : 1 repo Git, et plein de sous-projets dedans +
+** Avantage : on dispose de tout le code au même endroit, ce qui est pratique pour le débuggage +
+** Inconvénient : il n'est pas toujours possible de charger tout le mono-repo dans son IDE...
+* *multi-repo* : 1 projet PAR module +
+Nous n'avons donc que des dépendances binaires avec nos modules. +
+Problème : Lorsqu'il y a un changement dans un module, il faut faire un checkout du projet associé, recompiler, rebuilder, republier,etc. Bref, pas ce qu'il y a de plus pratique.
+
+Les composite builds vont permettrent de réunir ces 2 mondes, en nous gardant que les avantages.
+
+Implications :
+
+* permet de *substituer une dépendance binaire par une dépendance source*. +
+Un énorme avantage pour débugger une dépendance problématique. +
+C'est également *valable aussi pour les dépendances transitives*. +
+Et, grâce à l'utilisation du graphe de dépendances de Gradle, il s'agit bien d'une *substitution de dépendances*, et non d'un simple remplacement. +
+Si le graphe de dépendances de la dépendance source est différent de celui de la dépendance binaire, c'est bien ce nouveau graphe qui est pris en compte.
+* permet de *splitter un build multi-projets en plusieurs morceaux* (exploser un monolith en multi-modules) +
+On peut ne travailler avec le source *que* des projets qui nous intéressent, et garder le binaire pour les autres.
+
+Les builds multi-modules se déclare soit via le fichier `settings.gradle`, soit en utilisant le flag `--includeBuild`.
+
+Voir https://docs.gradle.org/current/userguide/composite_builds.html pour plus d'informations.
+
+==== Task output cache (*pour Gradle 4*)
+
+____
+Même après un clean, j'ai pas envie de faire le boulot 2 fois...
+____
+Pour *partager le résultat d'un build sur le réseau*. +
+Ainsi, le voisin ne perdra pas 25 min de build à récupérer tous les modules dont vous vous êtes déjà chargés ; il n'aura plus qu'à les récupérer du cache.
+
+Sympa d'un point de vue GreenIT car moins de compilation / build.
+
+=== Ma conclusion
+
+On sent bien au travers de la présentation de Cédric que Gradle continue de s'améliorer, et a peut-être même franchi un cap. +
+L'arrivée des services en ligne (*build scans*), et l'*accent général mis sur la performance* (jetez vraiment oeil au https://gradle.github.io/performance-guide/[*performance guide*]) montre bien cette volonté de Gradle de *faire passer nos builds eux-mêmes dans l'aire de l'industrialisation*, et de les rendre "rock-solid".
+
+Pour finir, un schéma comparant les temps d'exécution d'un `gradle clean test` vs un `mvn clean test` :
+
+image::ParisJUG_Gradle-JEE/ParisJUG_Gradle_gradle-vs-maven-clean-build.png[]
 
 === Ressources
 
+* Vidéo de la présentation : https://www.youtube.com/watch?v=eMk685z0B1E
 * Slides et code de la présentation : https://github.com/melix/parisjug-fast-builds
 * La documentation de Gradle : http://gradle.org/documentation 
+* Le *performance guide* de Gradle : https://gradle.github.io/performance-guide/
+* Cet article de Cédric, sur la blog Gradle, lui aussi dédié à la performance de l'outil : https://gradle.org/blog/performance-is-a-feature/
 
 == JEE quoi de neuf ? 
 
 Par Charles SABOURDIN et José PAUMARD
 
-Retour sur les annonces de JavaOne et Devoxx BE
+Charles et José nous proposent un retour sur les annonces de JavaOne et Devoxx BE concernant JEE, étant donné que la technologie avait souvent été décriée ces derniers temps ("JEE c'est mort...").
 
-Actuellement, on peut faire du JEE 7 avec une jvm 8
- Voir les graphes
-Https://javaee-guardians.io/lack-of-java-ee-8-progress/
- Mais, gaffe, tous viennent du fondateur de Java ee guardian, un ancien évangéliste JEE
+Ils nous explique que, malgré tout ce qui est dit :
 
-JEE semble quand même toujours très suivi, avec beaucoup de refs, de docs et de livres associés.
+* la communauté JEE est et reste (très) grande
+* nombreuses sont les JSRs JEE8 qui avancent bien
+* de nombreux livres et ressources existent sur le sujet, régulièrement remis à jour
 
-JavaOne : sur 450 prez, 50+ sur JEE
+De plus, sur 450 présentations à JavaOne, *plus de 50 portaient sur JEE*. Pas mal pour une technologie "morte"...
 
-JEE 8 :
- - Jcache n'avance pas des masses (tout une histoire)
-- JSONB : binding pour Json fortement demandé
+Pour rappel, voici le contenu de JEE 7 :
 
-On va avoir dans la foulée les sorties de JEE 8 et 9 (en quelques mois)
+image::ParisJUG_Gradle-JEE/ParisJUG_Gradle_rappels-JEE7.jpg[width=600]
 
-On commence à avoir un grand écart entre les JEE et les JSE (grosse désynchronisation)
+Et voici où nous en sommes pour JEE 8 :
 
-JEE : regrouper ce qui marche bien, pour proposer un standard (exemple avec Hibernate et CDI), dans cet ordre.
- C'est un organe "en retrait"
+image:ParisJUG_Gradle-JEE/ParisJUG_Gradle_etat-des-lieux-JEE8.jpg[width=400, float="left"]
+image:ParisJUG_Gradle-JEE/ParisJUG_Gradle_JEE8-objectifs.jpg[width=400]
+
+On note que :
+
+* *JCache* n'avance pas des masses (toute une histoire)
+* *JSONB*, le binding pour JSON, est très fortement demandé
+
+Charles et José *nous mettent également un petit peu en garde contre le mouvement https://javaee-guardians.io/["JEE Guardians"]*, avant tout poussé par son fondateur, un ancien évangéliste JEE (récemment viré par Oracle comme la plupart de leurs évangélistes...), qui n'est pas forcément objectif à 100%.
+
+Concernant la roadmap à venir, les sorties de JEE 8 et 9 vont être très proches (quelques mois d'écard) :
+
+image::ParisJUG_Gradle-JEE/ParisJUG_Gradle_JEE8-JEE9-roadmap.jpg[width=800]
+
+On note que l'on commence à avoir un *grand écart entre les JEE et les JSE* (grosse désynchronisation).
+
+Un rappel général sur la *philosophie de JEE* : [red]*regrouper ce qui marche bien, pour proposer un standard, dans cet ordre* (exemple avec Hibernate et CDI). +
+C'est pour ainsi dire un organe "en retrait" plutôt qu'à la pointe du progrès.
 
