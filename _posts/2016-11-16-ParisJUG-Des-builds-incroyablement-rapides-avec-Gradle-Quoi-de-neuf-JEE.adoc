@@ -175,3 +175,6 @@ On note que l'on commence à avoir un *grand écart entre les JEE et les JSE* (g
 Un rappel général sur la *philosophie de JEE* : [red]*regrouper ce qui marche bien, pour proposer un standard, dans cet ordre* (exemple avec Hibernate et CDI). +
 C'est pour ainsi dire un organe "en retrait" plutôt qu'à la pointe du progrès.
 
+=== Ressources
+
+* vidéo de la présentation : https://www.youtube.com/watch?v=ZimyehjAl5s
