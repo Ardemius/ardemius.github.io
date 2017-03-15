@@ -1,0 +1,19 @@
+= Hadoop état des lieux
+:published_at: 2017-03-15
+:hp-tags: Hadoop, HDFS, Spark, Presto
+:toc: macro
+:toclevels: 3
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:source-highlighter: highlightjs
+
+Voici un article très intéressant, proposant à la fois un *état des lieux sur l'adoption d'Hadoop*, et un ressenti de son usage par ses utilisateurs : +
+https://www.datanami.com/2017/03/13/hadoop-failed-us-tech-experts-say/
+
+Il en résulte que *le "buzz" autour d'Hadoop semble définitivement derrière nous*, même en se limitant au seul http://hadoop.apache.org/[*HDFS*]. +
+
+L'outil a montré ses *limites*, notamment en matière de *complexité* et de *performances*, et, par conséquent, son utilisation va maintenant être guidée par la raison (phase de maturité d'un outil), et non plus la seule envie ou effet de mode.
+
+Ce sont maintenant les outils exploitant au mieux son HDFS, comme http://spark.apache.org/[*Spark*] ou https://prestodb.io/[*Presto*], qui vont permettre à Hadoop de rentrer dans de nouveaux projets / solutions.
+
