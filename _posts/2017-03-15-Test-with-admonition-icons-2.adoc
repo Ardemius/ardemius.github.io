@@ -1,6 +1,0 @@
-= Test with admonition icons 2
-
-:hp-tags: OpenShift, Fabric8, OSX
-:numbered:
-
-NOTE: testing
