@@ -1,4 +1,4 @@
-= Hadoop état des lieux
+= Hadoop: état des lieux
 :published_at: 2017-03-15
 :hp-tags: Hadoop, HDFS, Spark, Presto
 :toc: macro
