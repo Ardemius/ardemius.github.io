@@ -33,10 +33,10 @@
     <meta property="og:site_name" content="Inquiring Javaist" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="A world where 1ms is worth 100 millions euros" />
-    <meta property="og:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..." />
+    <meta property="og:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Table of Contents Bank is an other Big Data domain Code optimization: Cache and Hardware Memory Architecture Benchmark to be sure! Multithreading..." />
     <meta property="og:url" content="https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" />
     <meta property="article:published_time" content="2015-07-19T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-10-31T12:02:51.175Z" />
+    <meta property="article:modified_time" content="2017-03-15T14:35:04.734Z" />
     <meta property="article:tag" content="Devoxx France 2015" />
     <meta property="article:tag" content="performance" />
     <meta property="article:tag" content="memory model" />
@@ -47,7 +47,7 @@
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="A world where 1ms is worth 100 millions euros" />
-    <meta name="twitter:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..." />
+    <meta name="twitter:description" content="Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Table of Contents Bank is an other Big Data domain Code optimization: Cache and Hardware Memory Architecture Benchmark to be sure! Multithreading..." />
     <meta name="twitter:url" content="https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html" />
     
     <script type="application/ld+json">
@@ -58,16 +58,16 @@
     "author": {
         "@type": "Person",
         "name": "Thomas SCHWENDER",
-        "image": "https://avatars.githubusercontent.com/u/1645190?v=3",
+        "image": "https://avatars3.githubusercontent.com/u/1645190?v=3",
         "url": "undefined/author/undefined",
         "sameAs": null
     },
     "headline": "A world where 1ms is worth 100 millions euros",
     "url": "https://Ardemius.github.io/2015/07/20/A-world-where-1ms-is-worth-100-millions-euros.html",
     "datePublished": "2015-07-19T22:00:00.000Z",
-    "dateModified": "2015-10-31T12:02:51.175Z",
+    "dateModified": "2017-03-15T14:35:04.734Z",
     "keywords": "Devoxx France 2015,  performance,  memory model,  lock-free algorithms,  queue,  volatile,  logs",
-    "description": "Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Bank is an other Big Data domain Alexandre and Thierry explain us that Big Data isn&amp;#8217;t only for Google, Facebook..."
+    "description": "Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA Elucidation by Thomas SCHWENDER (Softeam StarTech Java) Table of Contents Bank is an other Big Data domain Code optimization: Cache and Hardware Memory Architecture Benchmark to be sure! Multithreading..."
 }
     </script>
 
@@ -160,6 +160,37 @@
 <p>Presented at Devoxx France 2015 by Alexandre VICTOOR and Thierry ABALEA<br>
 Elucidation by Thomas SCHWENDER (Softeam StarTech Java)</p>
 </div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_bank_is_an_other_big_data_domain">Bank is an other Big Data domain</a></li>
+<li><a href="#_code_optimization_cache_and_hardware_memory_architecture">Code optimization: Cache and Hardware Memory Architecture</a></li>
+<li><a href="#_benchmark_to_be_sure">Benchmark to be sure!</a></li>
+<li><a href="#_multithreading_is_not_always_the_solution">Multithreading is not always the solution</a></li>
+<li><a href="#_other_ways_to_go_faster">Other ways to go faster</a>
+<ul class="sectlevel2">
+<li><a href="#_hexagonal_architecture">Hexagonal architecture</a></li>
+<li><a href="#_event_loop_and_queue_mpsc_multiple_producer_single_consumer">Event loop and queue MPSC (Multiple Producer Single Consumer)</a></li>
+<li><a href="#_event_loop_and_queues_spsc_single_producer_single_consumer">Event loop and queues SPSC (Single Producer Single Consumer)</a></li>
+<li><a href="#_an_example_of_lock_free_spsc_queue_the_ring_buffer">An example of lock-free SPSC queue: the Ring Buffer</a></li>
+<li><a href="#_the_code_volatile_code_keyword_an_efficient_design_for_memory_synchronization">The <code>volatile</code> keyword: an efficient design for memory synchronization</a>
+<ul class="sectlevel3">
+<li><a href="#_volatile_and_performance">Volatile and performance</a></li>
+<li><a href="#_java_util_concurrent_atomic_atomicxxx_to_overcome_volatile_performance">java.util.concurrent.atomic.AtomicXXX to overcome volatile performance</a></li>
+</ul>
+</li>
+<li><a href="#_instruction_pipelining">Instruction Pipelining</a></li>
+</ul>
+</li>
+<li><a href="#_logs">Logs</a></li>
+<li><a href="#_final_advise">Final advise</a></li>
+<li><a href="#_ressources">Ressources</a>
+<ul class="sectlevel2">
+<li><a href="#_the_ressources_i_used_to_dig_deeper">The ressources I used to dig deeper</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect1">
@@ -999,7 +1030,7 @@ For that you can use his open source tool: <a href="http://hdrhistogram.org/">Hd
                     </header>
                     <section>
                         <h4>Thomas SCHWENDER</h4>
-                        <img src="https://avatars.githubusercontent.com/u/1645190?v=3">
+                        <img src="https://avatars3.githubusercontent.com/u/1645190?v=3">
                         <span>Paris, France</span>
                         
                     </section>
