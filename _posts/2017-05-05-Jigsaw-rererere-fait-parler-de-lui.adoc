@@ -1,0 +1,8 @@
+= Jigsaw re(rerere ?)fait parler de lui
+
+Voici un petit article très intéressant sur les difficultés rencontrées dans le développement du système de modules de la plateforme Java, le "bien aimé" projet *Jigsaw* : + 
+https://www.developpez.com/actu/133621/Java-9-IBM-et-Red-Hat-vont-voter-contre-l-implementation-des-modules-Java-via-Jigsaw-une-solution-qui-ne-couvre-pas-tous-les-cas-d-utilisation/
+
+La synthèse en est simple : suite à plusieurs fonctionnalités importantes actuellement non supportées par Jigsaw (dans le cadre du déploiement d'applications), *IBM et Red Hat*, tous deux membres du JCP, ont annoncé qu'ils *voteront contre l'approbation de la spécification* (Jigsaw, ou *JPMS* : _Java Platform Module System_).
+
+Dans la mesure où le JDK 9 est attendu le 27 juillet, et où Jigsaw en est une (la ?) brique essentielle, il est donc envisageable que la sortie de Java 9 soit une nouvelle fois décalée, afin de donner plus de temps au développement de cette brique.
