@@ -1,0 +1,19 @@
+= A very good article on the rise of notebooks
+:published_at: 2017-06-22
+:hp-tags: Java 9, Jigsaw
+:toc: macro
+:toclevels: 3
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:source-highlighter: highlightjs
+
+For all those that are interested in "Big Data" *Notebooks*, I recommend the reading of this small article: https://www.datanami.com/2016/05/04/rise-data-science-notebooks/
+
+It briefly explains why they recently became so popular, essentially :
+
+* by facilitating the *direct connections* to all necessary *data sources*
+* because the can be *easily shared* and allow *easy collaborative work* (in the same way as a Google Doc)
+* by allowing *complex data processing* that can't be performed in SQL
+
+The result of this being that they are progressively *taking of part of the workload usually done by BI tools* (which, in their case, are limited to data sets queryable with SQL)
