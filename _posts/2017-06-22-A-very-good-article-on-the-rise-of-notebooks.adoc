@@ -1,6 +1,6 @@
 = A very good article on the rise of notebooks
 :published_at: 2017-06-22
-:hp-tags: Java 9, Jigsaw
+:hp-tags: Big Data, notebook
 :toc: macro
 :toclevels: 3
 :lb: pass:[<br> +]
