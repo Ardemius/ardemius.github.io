@@ -1,0 +1,24 @@
+= Développemen de l'usae de la Blockchain dans l'agroalimentaire à la fin 2017
+:published_at: 2016-11-21
+:hp-tags: Blockchain, IBM, Hyperledger, agroalimentaire
+:toc: macro
+:toclevels: 3
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:source-highlighter: highlightjs
+
+// toc::[]
+
+Je suis récemment tombé sur https://www.developpez.com/actu/156443/Blockchain-Nestle-Unilever-et-d-autres-grands-noms-du-secteur-agroalimentaire-se-tournent-vers-IBM-pour-la-tracabilite-des-denrees-perissables/[cet article de Developpez.com] traitant de l'usage de la Blockchain dans l'*agroalimentaire* par de grands groupes comme Walmart, Nestlé, et bien d'autres.
+
+L'article détaille ce nouveau cas d'usage de la blockchain, permettant d'*améliorer la traçabilité de l'information* autour des produits dans un contexte où les consommateurs se montrent de plus en plus exigeants (inquiets ?).
+
+Avec un peu de recul, 2 choses ont retenu mon attention :
+
+* la 1ere est qu'une nouvelle fois, la Blockchain est bien partie pour *révolutionner un nouveau secteur*, autre que la cryptomonnaie. (Un autre exemple étant le domaine de la Trade Finance).
+* le 2e est la confirmation des *points forts de la Blockchain* : *mise en relation de nombreux tiers, traçabilité, transparence et sécurité de l'information*.
+
+A voir le nombre croissant de grands noms séduient par cette technologie autour des précédents points forts, on peut raisonnablement tabler sur sa généralisation dans notre quotidien d'ici quelques années.
+
+
