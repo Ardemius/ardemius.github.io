@@ -1,5 +1,5 @@
-= Développemen de l'usae de la Blockchain dans l'agroalimentaire à la fin 2017
-:published_at: 2016-11-21
+= Développement de l'usage de la Blockchain dans l'agroalimentaire à la fin 2017
+:published_at: 2017-09-03
 :hp-tags: Blockchain, IBM, Hyperledger, agroalimentaire
 :toc: macro
 :toclevels: 3
