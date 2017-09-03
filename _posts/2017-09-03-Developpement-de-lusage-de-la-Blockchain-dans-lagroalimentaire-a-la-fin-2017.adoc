@@ -21,4 +21,7 @@ Avec un peu de recul, 2 choses ont retenu mon attention :
 
 A voir le nombre croissant de grands noms séduient par cette technologie autour des précédents points forts, on peut raisonnablement tabler sur sa généralisation dans notre quotidien d'ici quelques années.
 
+D'un point de vue technique, https://www.ibm.com/blockchain/platform/[la plateforme Blockchain d'IBM], bâtie autour du composant *Hyperledger* de la Linux Foundation, est plébiscitée.
+A voir l'utilisation croissante qui en est faite (cf le https://github.com/Ardemius/meetup-presentations/blob/master/BBL/20170518_Blockchain.adoc[BBL Softeam sur le sujet]) , IBM semble avoir fait le bon choix avec sa plateforme et offre de service complète autour de la Blockchain.
+
 
