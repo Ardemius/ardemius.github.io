@@ -1,0 +1,41 @@
+= Encore un exemple de montée en puissance du Big Data "au quotidien" : ManoMano.fr lève 60 millions
+:published_at: 2017-09-11
+:hp-tags: Big Data
+:toc: macro
+:toclevels: 3
+:lb: pass:[<br> +]
+:imagesdir: ./images
+:icons: font
+:source-highlighter: highlightjs
+
+// toc::[]
+
+Voici http://www.journaldunet.com/ebusiness/commerce/1197082-info-jdn-la-marketplace-de-bricolage-manomano-leve-60-millions-d-euros/[un article du Journal du Net], sur lequel je suis tombé aujourd'hui, et qui démontre une nouvelle fois la montée en puissance du Big Data dans *les domaines "du quotiden"*.
+
+Dans le cas présent, il est question de la dernière *levée de fonds de 60 millions d'euros* de la StartUp française ManoMano, qui gère https://manomanofr[la marketplace de *bricolage* du même nom]. +
+Pour information, cette société, fondée en 2013, est en très forte croissance (disruption du marché), avec un CA 2017 prévu aux alentours de 250 millions d'euros (90 M€ en 2016).
+
+Cette levée de fonds va principalement servir au *développement des capacités d'analyses de la plateforme*, et à l'*amélioration de l'expérience utilisateur*. +
+Parmi les uses cases cités nous retrouvons : 
+
+* catégorisation des produits
+* recommandations personnalisées
+* parcours d'achat
+* *chatbot* pour les FAQ
+
+Vous l'aurez compris, ils recrutent donc principalement des *Data Ingineers* et des *Data Scientists*. 
+
+Pour un exemple des profils recherchés, je vous invite à jeter un oeil à https://www.welcometothejungle.co[Welcome to the jungle] (pour ceux qui ne connaissent pas, excellent site de veille professionnelle, avec un petit air de https://www.chooseyourboss.com/[Choose your Boss]) : 
+
+* https://www.welcometothejungle.co/companies/manomano/jobs/senior-big-data-engineer_paris[poste de senior Data Engineer]
+* https://www.welcometothejungle.co/companies/manomano/jobs/data-scientist-senior-h-f_paris_MANOM_N4QNXqP[poste de senior Data Scientist]
+
+Concernant ce dernier poste, j'adore ce paragraphe de l'annonce :
+
+____
+une passion pour l’intelligence artificielle et le Machine Learning avec *un vrai enthousiasme pour explorer et apprendre* : cours en ligne, papiers de recherche, compétitions (Kaggle, Datascience.net), etc.
+____
+
+Pour tous les présents à la réunion du StarTECH Java du 05/09, ceci fait bien suite à nos discussions sur le développement du secteur, *et* conforte d'autant plus le lancement de nos 3 initiatives Big Data ! :wink:
+
+
