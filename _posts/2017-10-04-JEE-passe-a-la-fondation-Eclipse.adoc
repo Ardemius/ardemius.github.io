@@ -1,6 +1,6 @@
 = JEE passe à la fondation Eclipse
 :published_at: 2017-10-04
-:hp-tags: JEE, 
+:hp-tags: JEE, Fondation Eclipse
 :toc: macro
 :toclevels: 3
 :lb: pass:[<br> +]
