@@ -13,7 +13,7 @@
 En passant sur les tweets des https://twitter.com/duchessfr[Duchess], je suis tombé sur cet excellent article de Katia ARESTI, http://www.duchess-france.org/jai-teste-pour-vous-etre-dans-le-comite-du-cfp-de-devoxx-france/["J’ai testé pour vous : être dans le comité du CFP de Devoxx France"], qui a fait partie du jury de Devoxx France 2016.
 
 Elle y donne plusieurs conseils pour augmenter ses chances de voir son sujet retenu :wink: +
-*Taille du titre*, importance de la *description* et des *notes destinées au jury*, tout est très pragmatique.
+Importance de *soumettre tôt son sujet* (ne pas attendre la veille de la fermeture du CFP...), *taille du titre*, importance de la *description* et des *notes destinées au jury*, tout est très pragmatique.
 
 On y trouve également une réflexion sur *la place des femmes comme speaker dans les conférences techniques*, et les multiples préjugés qui les touchent encore. +
 Si l'on observe une véritable prise de conscience du sujet ces dernières années, il semble néanmoins rester encore beaucoup à faire pour permettre aux femmes de s'intégrer normalement, dans de bonnes conditions dans le milieu de l'IT.
